@@ -584,6 +584,221 @@ function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 let settings = Object.assign({rate:0.9, offset:0, sfx:true, cheer:true, voiceSrc:'human'}, lsGet('wh.settings', {}));
 let students = lsGet('wh.students', null);
 const SAMPLE_LIB = () => ({id:'sample', name:'示例词库 · 考研高频 A–D', builtin:true, ...parseList(SAMPLE)});
+/* ready-made textbook libraries: every student gets them once; words/meanings always come from this code, so fixes reach everyone */
+const PRESET_TEXT = {
+  pep9b: {name:'人教版九年级下册 · Unit 1–5', text:`lantern	n. 灯笼；提灯
+eve	n. 前夜；前夕
+tomb	n. 坟墓；冢
+parade	n. 游行；阅兵
+ancestor	n. 祖宗；祖先
+costume	n. 戏装；服装
+row	v. 划（船）；n. 一排；一列
+wash away	洗掉；冲走
+princess	n. 公主
+pale	adj. 苍白的；白皙的
+policeman	n.（pl. policemen）（男）警察
+shame	n. 让人遗憾的事；羞愧
+president	n.（公司）董事长；主席；总统
+go all out	全力以赴；竭尽全力
+regret	v. & n. 遗憾；懊悔
+sofa	n. 长沙发
+compound	adj. 复合的；n. 复合词；混合物
+complex	adj. 复杂的
+lunar	adj. 月亮的
+reunite	v.（使）再次相聚
+mooncake	n. 月饼
+steal	v.（stole, stolen）偷；窃取
+bring together	把……召集起来
+couplet	n. 对联
+firework	n. 烟火；烟花
+gather	v. 聚集；集合
+count down	倒计时
+midnight	n. 午夜；子夜
+Scottish	adj. 苏格兰的；苏格兰人的
+set off	点燃；动身
+Chinese lunar calendar	中国农历
+sweep out	清扫干净（房间等）
+dust	n. 尘土；v. 擦去（灰尘）
+breeze	n. 微风；和风
+throughout	prep. & adv. 遍及；自始至终
+fool	n. 蠢人；傻瓜；v. 欺骗
+powder	n. 粉末；细面
+background	n. 背景
+carnival	n. 狂欢节；嘉年华
+samba	n. 桑巴舞
+site	n. 场所；地方
+artefact	(=artifact) n.（有史学价值的）人工制品
+horn	n.（羊、牛等动物的）角
+Egyptian	adj. 埃及的；埃及人的；n. 埃及人
+empress	n. 女皇；皇后
+queen	n. 女王；王后
+mummy	n. 木乃伊；（儿语）妈妈
+archaeologist	(=archeologist) n. 考古学家
+wealthy	adj. 富有的；富裕的
+clothing	n. 衣物；服装
+cotton	n. 棉；棉花；棉织物
+gram	(=gramme) n. 克（重量单位）
+pound	n. 磅（重量单位）；镑（货币单位）
+matchbox	n. 火柴盒
+ash	n. 灰烬；废墟
+unlikely	adj. 不大可能发生的
+jade	n. 玉；翡翠
+wealth	n. 财产；财富
+trade	n. 贸易；买卖
+repair	v. & n. 修理；修补
+bring ... to life	使……鲜活起来；赋予生命
+archaeological	(=archeological) adj. 考古学的
+millions (of ...)	数百万的；大量的
+gate	n. 门；大门
+aware	adj. 知道的；意识到的
+aware of	知道；意识到
+underground	adv. 在地（面）下；adj. 地（面）下的；n. 地铁
+pit	n. 深坑；深洞
+world-famous	adj. 举世闻名的
+dig	v.（dug, dug）挖（土）；掘（地）
+remains	n.（pl.）遗迹；残留物
+era	n. 时代；年代
+highly	adv. 非常；极
+skilled	adj. 有技能的；熟练的
+skilled in	善于；精通
+metal	n. 金属
+carve	v. 雕刻
+style	n. 样式；款式
+unique	adj. 独特的；罕见的
+evidence	n. 证据；证明
+aim	n. 目的；目标；v. 力求达到；力争做到
+dollar	n. 元（美国、加拿大等国的货币单位）
+cent	n. 分；分币
+statue	n. 雕塑；雕像
+Mayan	adj. 玛雅人的；玛雅语的；n. 玛雅人；玛雅语
+shadow	n. 影子；阴影
+crawl	v. 爬行
+interestingly	adv. 有趣地
+shrimp	n. 虾
+burst	v.（burst, burst）冲；（使）爆裂；n. 迸发
+brushstroke	n. 一笔；一画
+lifelike	adj. 生动的；逼真的
+combine	v.（使）结合；（使）组合
+combine ... with ...	把……与……结合起来
+opposite	adj. 截然相反的；对立的；n. 反面
+scene	n. 景色；情景
+empty	adj. 空的；v. 倒空
+cover ... in	覆盖
+perfectly	adv. 完美地；完全地
+beauty	n. 美人；美丽
+sculptor	n. 雕塑家
+skin	n. 皮肤；皮
+lab	(=laboratory) n. 实验室
+diet	n. 节食；规定饮食
+on a diet	节食
+knock	v. 敲（门、窗）；碰撞；n. 敲击
+model	v. 做模特儿；模仿；n. 模特；模型
+porcelain	n. 瓷器
+rare	adj. 稀有的；罕见的
+commonly	adv. 通常；一般
+china	n. 瓷；瓷器
+artistic	adj. 美术的；艺术的
+on show	在展出
+calligrapher	n. 书法家
+recreate	v. 使再现
+pity	n. & v. 遗憾；同情
+original	adj. 真迹的；最初的
+version	n. 版本
+copy	v. 模仿；复制；n. 复制件
+apart	adv. 除外；分开
+apart from	除了……（还有）；除了……（别无）
+postman	n.（pl. postmen）邮递员
+packet	n. 小件包装；小袋
+chalk	n. 粉笔
+boss	n. 老板；上司
+within	prep. 在……时间之内；不到……
+noisy	adj. 嘈杂的；吵闹的
+pond	n. 池塘
+sunflower	n. 向日葵
+starry	adj. 布满星星的
+passion	n. 激情；热爱
+reuse	v. 再次使用；重复使用
+recycle	v. 回收利用
+pollution	n. 污染；污染物
+chemical	n. 化学制品；化学品；adj. 化学的；化学品的
+smog	n. 烟雾
+global	adj. 全球的；全世界的
+global warming	全球（气候）变暖；地球大气层变暖
+pollute	v. 污染；弄脏
+disposal	n. 去掉；清除
+package	v. 把……包装好；n. 包裹；包装好的东西
+environmental	adj. 自然环境的；生态环境的
+well-known	adj. 众所周知的；著名的
+disturb	v. 打扰；使焦虑
+trap	v. 设陷阱捕捉；卡住；n. 陷阱；罗网
+lamp	n. 台灯
+bother	v. 使（某人）烦恼；花费时间精力（做某事）
+loss	n. 丧失；亏损；丢失
+guardian	n. 保护者；守卫者
+smelly	adj. 有难闻气味的；有臭味的
+ban	n. 明令禁止；禁止做某事
+riverbank	n. 河岸；河堤
+steady	adj. 稳定的；持续的
+income	n. 收入；收益
+clean-up	n. 清扫；清除
+generation	n. 一代人；同代人
+protection	n. 保护；保护物
+tyre	(=tire) n. 轮胎
+bury	v. 覆盖；埋葬
+landfill	n. 垃圾填埋地（或场）；垃圾填埋
+leave behind	丢下；忘了带
+come up with	找到；想到
+outdoor	adj. 户外的；室外的
+wash up	把……冲到陆地上；洗刷
+bin	n. 垃圾箱；（有盖）大容器
+graduation	n. 毕业
+vote	v. & n. 投票；选举
+leader	n. 领导者；领袖
+presentation	n. 演出；介绍
+lifelong	adj. 终身的；毕生的
+projector	n. 放映机；投影仪
+vocational	adj. 职业的；职业技术的
+whatever	pron. & adv. 任何；无论什么
+path	n. 路线；道路
+mainly	adv. 主要地；首要地
+silent	adj. 不说话的；沉默的
+pronounce	v. 发（音）；读（音）
+abroad	adv. 在国外；到国外
+graduate	v. 毕业；n. 毕业生
+continuous	adj. 持续的；连续的
+madam	n. 女士；夫人
+translate	v. 翻译
+part-time	adj. 兼职的
+full-time	adj. 全职的
+senior	adj. 高级别的；年纪大的
+technical	adj. 技术的；技能的
+grateful	adj. 感激的；表示感谢的
+encouragement	n. 鼓舞；鼓励
+line of work	行业
+bear ... in mind	记住；将……记在心中
+diligence	n. 勤勉；勤奋
+equally	adv. 平等地；同样地
+cherish	v. 珍视；珍爱
+lemon	n. 柠檬
+lemonade	n. 柠檬水；柠檬汽水
+cheat	v. 欺骗；作弊
+till	prep. & conj. 直到；到……为止
+inform	v. 通知；告知
+vocation	n. 职业；工作
+patience	n. 耐心；忍耐力
+honestly	adv. 真的；诚实地
+fall behind	落在后面
+achievable	adj. 可达到的
+fellow	adj. 同伴的；同类的
+unforgettable	adj. 难以忘怀的；令人难忘的
+from the (bottom of one's) heart	真诚地；从内心（深处）`}
+};
+const PRESET_LIB = id => ({id, preset:id, name:PRESET_TEXT[id].name, ...parseList(PRESET_TEXT[id].text)});
+function ensurePresets(st){
+  const have=st.presets||[]; let added=false;
+  Object.keys(PRESET_TEXT).forEach(id=>{ if(!have.includes(id)){ libs.unshift(PRESET_LIB(id)); have.push(id); added=true; } });
+  st.presets=have; if(added) save();
+}
 if(!students){
   students=[];
   const old=lsGet('wh.libs',null);       // data from before students existed → first student
@@ -599,7 +814,7 @@ function applySkin(sk){ document.documentElement.dataset.skin = sk==='teal' ? 't
 const SKIN_PICK=(name,cur)=>`<div class="skin-pick"><label><input type="radio" name="${name}" value="candy" ${cur!=='teal'?'checked':''}><span class="sw candy"></span>糖果云朵</label><label><input type="radio" name="${name}" value="teal" ${cur==='teal'?'checked':''}><span class="sw teal"></span>青绿闯关</label></div>`;
 function loadStudent(st){
   stu=st; const k=x=>`wh.${st.id}.${x}`;
-  libs=lsGet(k('libs'),[]).map(l=>l.builtin?SAMPLE_LIB():l);
+  libs=lsGet(k('libs'),[]).map(l=>l.builtin?SAMPLE_LIB():(l.preset&&PRESET_TEXT[l.preset]?PRESET_LIB(l.preset):l));
   prog=lsGet(k('prog'),{}); log=lsGet(k('log'),{}); pend=lsGet(k('pend'),{}); forgot=lsGet(k('forgot'),{}); rpend=lsGet(k('rpend'),{}); hist=lsGet(k('hist'),{}); af=lsGet(k('af'),{}); aflog=lsGet(k('aflog'),{});
 }
 const CAP = 45, PER = 5;
@@ -1578,7 +1793,7 @@ function finishAF(){
 
 /* ---------- students (first page) ---------- */
 function studentStats(st){
-  const libsS=lsGet(`wh.${st.id}.libs`,[]).map(l=>l.builtin?SAMPLE_LIB():l);
+  const libsS=lsGet(`wh.${st.id}.libs`,[]);
   const keep={stu,libs,prog,log,pend,forgot,rpend,hist,af,aflog};
   loadStudent(st);
   let due=0, mastered=0, words=0; libs.forEach(l=>{const x=stats(l); due+=x.dueAll; mastered+=x.box[5]; words+=x.total;});
@@ -1609,7 +1824,7 @@ function studentsHome(){
     </div>
   </details>`;
   FX.popIn(app.querySelectorAll('.stu'));
-  app.querySelectorAll('.stu').forEach(b=>b.onclick=()=>{ loadStudent(students.find(x=>x.id===b.dataset.sid)); applySkin(stu.skin); home(); window.scrollTo(0,0); });
+  app.querySelectorAll('.stu').forEach(b=>b.onclick=()=>{ loadStudent(students.find(x=>x.id===b.dataset.sid)); ensurePresets(stu); applySkin(stu.skin); home(); window.scrollTo(0,0); });
   document.getElementById('addStu').onclick=()=>{
     const name=document.getElementById('newName').value.trim();
     if(!name){ toast('请填写昵称或姓名'); return; }
