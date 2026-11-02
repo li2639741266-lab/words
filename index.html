@@ -292,13 +292,13 @@ details.panel[open] summary::after{content:"−"}
 .mixmode .cut-hint{color:#fff}
 .mixbtn{white-space:nowrap}
 /* 混组检查: 8 slimmer rows */
-.mixmode .cards{grid-template-rows:repeat(8,minmax(0,1fr));gap:7px}
-.mixmode .card{border-radius:16px}
-.mixmode .cc-main{padding-left:14px}
-.mixmode .cc-main .t{font-size:clamp(20px,5.8vw,25px)}
-.mixmode .cc-main .m{font-size:13px;padding:2px 8px;-webkit-line-clamp:2}
-.mixmode .scissor{width:40px;height:40px}
-.mixmode .scissor svg{width:20px;height:20px}
+.cutmode .cards{grid-template-rows:repeat(8,minmax(0,1fr));gap:7px}
+.cutmode .card{border-radius:16px}
+.cutmode .cc-main{padding-left:14px}
+.cutmode .cc-main .t{font-size:clamp(20px,5.8vw,25px)}
+.cutmode .cc-main .m{font-size:13px;padding:2px 8px;-webkit-line-clamp:2}
+.cutmode .scissor{width:40px;height:40px}
+.cutmode .scissor svg{width:20px;height:20px}
 /* ===== 风格二「青绿闯关」: mint game console — chamfered banners, corner brackets, 会/不会 pills ===== */
 .mark .lbl,.boxbar{display:none}
 :root[data-skin="teal"]{
@@ -394,7 +394,8 @@ details.panel[open] summary::after{content:"−"}
 [data-skin="teal"] .praise small{text-shadow:0 2px 0 #0B7F72}
 .skin-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .skin-pick label{display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px;border-radius:14px;border:2px solid var(--line);font-size:13px;font-weight:700;cursor:pointer}
-.skin-pick input{position:absolute;opacity:0;pointer-events:none}
+.skin-pick label{position:relative}
+.skin-pick input{position:absolute;opacity:0;pointer-events:none;width:1px!important;height:1px!important;margin:0;padding:0;left:0;top:0}
 .skin-pick label:has(input:checked){border-color:var(--accent);background:var(--surface-2)}
 .skin-pick .sw{width:100%;height:34px;border-radius:10px}
 .skin-pick .sw.candy{background:linear-gradient(135deg,#5EC2FF,#FF9A3C 60%,#FF5A7E)}
@@ -442,7 +443,7 @@ details.panel[open] summary::after{content:"−"}
 .afb:disabled{cursor:default}
 .afr.is-ok .afb.ok{background:var(--yes);color:#fff;border-color:var(--yes)}
 .afr.is-ng .afb.ng{background:var(--no);color:#fff;border-color:var(--no)}
-.afr.is-ok .afb.ng,.afr.is-ng .afb.ok{opacity:.2}
+.afr.is-ok .afb.ng,.afr.is-ng .afb.ok{opacity:.45}
 .afr.is-ng{background:#FFF3F6}
 .af-sum{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
 .af-sum>div{background:#fff;border-radius:18px;padding:14px 6px;display:flex;flex-direction:column;align-items:center;box-shadow:0 4px 0 rgba(44,139,211,.15)}
@@ -583,7 +584,7 @@ details.panel[open] summary::after{content:"−"}
 .mp-card p{margin:0;color:var(--muted)}
 .live-lesson{background:linear-gradient(180deg,#FFF6E8,#fff)}
 /* student hub */
-.hub{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hub{display:grid;grid-template-columns:1fr;gap:12px}
 .hub-tile{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:18px 16px;border-radius:22px;min-height:150px;text-align:left;color:#fff;box-shadow:0 5px 0 var(--sh),0 12px 22px rgba(59,43,99,.14);transition:transform .08s}
 .hub-tile:active{transform:translateY(3px)}
 .hub-tile .hi{width:46px;height:46px;border-radius:14px;background:rgba(255,255,255,.25);display:grid;place-items:center}
@@ -644,6 +645,90 @@ details.panel[open] summary::after{content:"−"}
 .vt-wrong .fg b{font-size:15px;color:#13403B}
 .vt-wrong .fg span{color:#24403C;min-width:0;overflow-wrap:anywhere}
 .vt-wrong .fg em{font-style:normal;font-size:11px;color:#5C8781;white-space:nowrap}
+[hidden]{display:none!important}
+/* hub: one option per row */
+.hub-tile{flex-direction:row!important;align-items:center!important;gap:14px!important;min-height:0!important;padding:18px 16px!important}
+.hub-tile .ht{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.hub-tile .ht b{margin-top:0!important}
+.hub-tile .hi{flex:none;width:52px;height:52px}
+.hub-tile .hc{font-size:30px;font-weight:300;opacity:.85;line-height:1}
+.set-link{display:flex;align-items:center;gap:10px;padding:16px 18px;border-radius:var(--r);background:var(--surface);color:var(--ink);text-align:left;box-shadow:0 5px 0 rgba(44,139,211,.18),0 12px 24px rgba(59,43,99,.08)}
+.set-link span{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.set-link b{font-size:18px;font-weight:800}
+.set-link small{font-size:13px;color:var(--muted)}
+.set-link i{font-style:normal;font-size:26px;color:var(--muted)}
+.set-link:active{transform:translateY(3px)}
+.vt-end{align-self:center;font-size:14px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:6px 10px}
+.vt-end.arm{color:var(--accent-dk);font-weight:700;text-decoration:none}
+/* 助教评语 status panel */
+.st-panel{display:flex;flex-direction:column;gap:10px}
+.st-g{display:flex;flex-direction:column;gap:6px}
+.st-g>span{font-size:12.5px;font-weight:700;color:var(--muted)}
+.st-chips{display:flex;flex-wrap:wrap;gap:6px}
+.st-chip{padding:7px 12px;border-radius:999px;font-size:14px;font-weight:700;background:var(--surface-2);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.st-chip[aria-pressed="true"]{background:#1DB3A1;color:#fff;box-shadow:none}
+.st-panel input{font:inherit;font-size:15px;padding:11px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.st-hint{margin:0;font-size:12px;color:var(--muted);text-align:center}
+/* 助教寄语 after a review */
+.fb-card{background:linear-gradient(180deg,#FFFBEF,#FFF4DA);border-radius:var(--r);padding:14px 16px;box-shadow:0 4px 0 #F4DFAE,0 10px 20px rgba(150,100,20,.10);display:flex;flex-direction:column;gap:8px}
+.fb-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.fb-h b{font-size:16px;font-weight:800;color:#8A5A00}
+.fb-h span{display:flex;gap:6px}
+.fb-text{margin:0;font-size:15px;line-height:1.75;color:#4A3A12;border-radius:10px}
+.fb-text.editing{outline:2px dashed #E0A526;outline-offset:4px;background:#fff}
+#revDone{display:flex;flex-direction:column;gap:14px;margin-top:10px}
+/* 7-day plan: tappable days */
+button.afd{background:none;border:0;padding:4px 0;border-radius:10px;cursor:pointer;font:inherit}
+button.afd:active{background:rgba(123,92,240,.10)}
+.day-sheet{position:fixed;inset:0;z-index:60;background:rgba(30,20,60,.45);display:flex;align-items:flex-end;justify-content:center;padding:16px}
+.ds-in{width:100%;max-width:520px;max-height:78vh;background:#fff;border-radius:22px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 20px 40px rgba(0,0,0,.25)}
+.ds-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ds-h b{font-size:17px;color:var(--ink)}
+.ds-list{overflow:auto;display:flex;flex-direction:column;gap:6px;padding:3px}
+.ds-w{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:baseline;text-align:left;padding:9px 12px;border-radius:12px;background:var(--surface-2);font-size:14px}
+.ds-w b{font-size:16px;color:var(--ink)}
+.ds-w span{color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.ds-empty,.ds-note{margin:0;font-size:12.5px;color:var(--muted);text-align:center}
+.afb[aria-pressed="true"]{transform:scale(1.06)}
+/* swipe tray */
+.swiped{transform:translateX(-6px);transition:transform .15s}
+.sw-tray{position:fixed;z-index:55;width:148px;display:flex;gap:6px;padding:6px;box-sizing:border-box;animation:swIn .16s ease-out}
+@keyframes swIn{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:none}}
+.sw-b{flex:1;border-radius:14px;font-size:14px;font-weight:800;color:#fff;line-height:1.25;box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.sw-dist{background:linear-gradient(180deg,#B49CFF,#7B5CF0)}
+.sw-dist.on{background:linear-gradient(180deg,#9FA6B2,#6F7684);font-size:12px}
+.sw-dict{background:linear-gradient(180deg,#5FC9E8,#1A8FB3)}
+.learn-links{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+/* 区分本 */
+.ds-add-row{display:flex;gap:8px}
+.ds-add-row input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+.ds-group{display:flex;flex-direction:column;gap:10px}
+.ds-item{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:14px;background:var(--surface-2)}
+.dsi-top{display:flex;align-items:flex-start;gap:8px}
+.dsi-w{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:2px}
+.dsi-w b{font-size:19px;color:var(--ink)}
+.dsi-w span{font-size:13.5px;color:var(--muted);overflow-wrap:anywhere}
+.dsi-act{display:flex;gap:6px;flex:none}
+.dsi-act a.btn{text-decoration:none}
+.dsi-note{font:inherit;font-size:14px;line-height:1.5;min-height:52px;resize:vertical;padding:8px 10px;border-radius:10px;border:1.5px dashed var(--line);background:#fff;color:var(--ink)}
+/* cloud / student mode */
+.cloud-line{font-size:12.5px;color:var(--muted);text-align:center}
+.cloud-line.err{color:#D9485F}
+.cloud-box{display:flex;flex-direction:column;gap:4px;padding:10px 12px;border-radius:12px;background:var(--surface-2)}
+.cloud-box div:first-child{display:flex;justify-content:space-between;gap:8px;font-size:14px}
+.cloud-box span{color:var(--muted)}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap}
+.login-entry{align-self:center}
+.login-box{display:flex;flex-direction:column;gap:10px}
+.login-box p{margin:0;font-size:14px;line-height:1.6;color:var(--muted)}
+.login-box input{font:inherit;font-size:16px;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
+pre.cred{white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.7;margin:0;padding:12px;border-radius:12px;background:var(--surface-2);color:var(--ink);-webkit-user-select:text;user-select:text}
+.stu-mode #goLearn,.stu-mode #del,.stu-mode #goReports,.stu-mode #nextRound,.stu-mode #roundPick,.stu-mode .tonly,.stu-mode #fbEdit,.stu-mode #again,.stu-mode #goNew{display:none!important}
+/* the word currently being read */
+.reading{outline:3px solid var(--accent);outline-offset:2px;border-radius:16px}
+[data-skin="teal"] .reading{outline-color:#FF8A1F}
+.cutcard.reading,.card.reading{outline-offset:3px}
+.afr.reading{outline-offset:-3px;border-radius:12px}
 </style>
 
 </head><body>
@@ -5599,6 +5684,7 @@ const save = () => {
   lsSet('wh.settings',settings); lsSet('wh.students',students);
   if(!stu) return; const k=x=>`wh.${stu.id}.${x}`;
   lsSet(k('libs'),libs.map(l=>l.builtin?{id:l.id,builtin:true}:(l.preset?{id:l.id,preset:l.preset}:l))); lsSet(k('prog'),prog); lsSet(k('log'),log); lsSet(k('pend'),pend); lsSet(k('forgot'),forgot); lsSet(k('rpend'),rpend); lsSet(k('hist'),hist); lsSet(k('af'),af); lsSet(k('aflog'),aflog); lsSet(k('rounds'),rounds);
+  cloudMark(stu);
 };
 const FG = lib => forgot[lib.id] || (forgot[lib.id]=[]);
 const PD = lib => pend[lib.id] || (pend[lib.id]=[]);
@@ -5903,7 +5989,7 @@ function openLib(lib){
   }).join('');
   const revBusy = dueN>0 || rp.length>0, afN=afDue(lib).length;
   const revSub = dueN ? `待复习 ${dueN} 个` : (rp.length ? `遗忘待学 ${rp.length} 个` : '今天已复习完');
-  const learnSub = revBusy ? '先完成复习' : (!s.fresh ? '生词库已学完' : (pd.length ? `已选 ${pd.length} 个，继续` : `生词库 ${s.fresh} 个`));
+  const learnSub = (!s.fresh ? '生词库已学完' : (pd.length ? `已选 ${pd.length} 个，继续` : `生词库 ${s.fresh} 个`));
   const nf=freshList(lib).filter(w=>FG(lib).includes(w)).length;
   const todayWords = lg.learn.length ? `<div class="task"><div class="label">今天学的单词（点一下听发音）</div><div class="today-list">${lg.learn.map(w=>`<button data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div></div>` : '';
   app.innerHTML = `
@@ -5913,9 +5999,9 @@ function openLib(lib){
   <div class="boxwrap"><div class="boxes">${boxes}</div><div class="rise"><span>生词</span><i></i><span>越往右越熟练</span></div></div>
   <div class="go-row">
     <button class="go-card rev" id="goRev" ${revBusy?'':'disabled'}><b>开始复习</b><span>${revSub}</span></button>
-    <button class="go-card learn" id="goLearn" ${!revBusy && s.fresh?'':'disabled'}><b>开始学习</b><span>${learnSub}</span></button>
+    <button class="go-card learn" id="goLearn" ${s.fresh?'':'disabled'}><b>开始学习</b><span>${learnSub}</span></button>
   </div>
-  <p class="go-hint">${revBusy?'先复习「初出茅庐」到「登堂入室」里到期的单词：记得的进一格，遗忘的重新学一遍。复习完才能学新词。':(s.fresh?`从生词库选词学习${nf?`，上次遗忘的 ${nf} 个排在最前面`:''}。学完进入「初出茅庐」，明天复习。`:'生词库已经学完，按时回来复习就行。')}</p>
+  <p class="go-hint">${revBusy?'「初出茅庐」到「登堂入室」里有到期的单词：记得的进一格，遗忘的重新学一遍。建议先复习，再学新词。':(s.fresh?`从生词库选词学习${nf?`，上次遗忘的 ${nf} 个排在最前面`:''}。学完进入「初出茅庐」，明天复习。`:'生词库已经学完，按时回来复习就行。')}</p>
   <div class="stats"><div><div class="v num">${lg.rev}</div><div class="k">今天复习</div></div><div><div class="v num">${lg.learn.length}</div><div class="k">今天学新</div></div><div><div class="v num">${lg.known.length}</div><div class="k">直接掌握</div></div></div>
   ${todayWords}
   ${lib.builtin||lib.preset?'':`<button class="btn sm danger" id="del" style="align-self:center">删除这个词库</button>`}`;
@@ -5960,6 +6046,8 @@ function promote(lib,w){
 /* ---------- 选词 (learn) / 复习 (rev): marked words stay on the page; tap the same mark again to undo it ---------- */
 const VISIBLE=25;
 const PAGE=40;
+// outline the word that was just tapped, so students can see which word is being read
+function markReading(el){ document.querySelectorAll('.reading').forEach(x=>{ if(x!==el) x.classList.remove('reading'); }); if(el) el.classList.add('reading'); }
 function startStudy(mode){
   if(mode==='review') mode='rev';
   S={mode, list: mode==='rev' ? dueList(cur) : freshList(cur), shown:40, marks:{}, prev:{}, prevHist:{}};
@@ -5989,7 +6077,7 @@ function renderPick(){
     <div class="prog"><i style="width:${total?done/total*100:100}%"></i></div>
   </div>
   ${simNote()}
-  <p class="intro">${rev?'记得点「记得」，单词进入下一个词盒；忘了点「遗忘」，稍后分组重新学习。':'认识点「会」，不认识点「不会」。'}点单词听发音，双击看释义。</p>
+  <p class="intro">${rev?'记得点「记得」，单词进入下一个词盒；忘了点「遗忘」，稍后分组重新学习。':'认识点「会」，不认识点「不会」。'}点单词听发音，双击看释义，再点一下收起；向左划可加入区分本或查词典。</p>
   ${list}
   <div class="bottom"><span class="tally">${tallyHTML()}</span><button class="btn primary" id="startLearn" ${n?'':'disabled'}>开始学习</button></div>`;
   document.getElementById('sBack').onclick=()=>{ const k=QD().length; if(k) toast(rev?`遗忘的 ${k} 个词会保留，下次接着学`:`已选的 ${k} 个词会保留`); openLib(cur); };
@@ -6003,6 +6091,15 @@ function updatePick(){
   document.getElementById('seen').textContent=`${done}/${total}`;
   app.querySelector('.tally').innerHTML=tallyHTML();
   document.getElementById('startLearn').disabled=!QD().length;
+  if(S.mode==='rev'){
+    const allOk = total>0 && done===total && !QD().length, has=document.getElementById('revDone');
+    if(allOk && !has){
+      document.getElementById('more').insertAdjacentHTML('afterend', `<div id="revDone"><div class="done"><h3>今天的复习完成！</h3><p>${total} 个单词全部记得，已升入下一个词盒。</p><button class="btn primary" id="revBack">回到词库</button></div>${feedbackHTML()}</div>`);
+      document.getElementById('revBack').onclick=()=>openLib(cur);
+      bindFeedback('box', {n:total, ok:total, ng:0});
+      document.getElementById('revDone').scrollIntoView({behavior:'smooth', block:'start'});
+    } else if(!allOk && has) has.remove();
+  }
 }
 function pick(row, w, ok){
   const p=P(cur), lg=L(cur), t=today(), was=S.marks[w], want=ok?'yes':'no', rev=S.mode==='rev', hi=HI(cur);
@@ -6032,7 +6129,7 @@ function pick(row, w, ok){
   save();
   const m=S.marks[w];
   if(rev) lessonMarkRev(w, m);
-  row.className='w'+(rev?' txt':'')+(m?' is-'+m:'');
+  row.className='w'+(rev?' txt':'')+(m?' is-'+m:'')+(S.rd===w?' reading':'');
   row.querySelector('.mark.yes').setAttribute('aria-pressed', m==='yes');
   row.querySelector('.mark.no').setAttribute('aria-pressed', m==='no');
   updatePick();
@@ -6101,12 +6198,14 @@ app.addEventListener('click',e=>{
   if(e.target.closest('.say')){
     if(S.mode==='learn' || S.mode==='rev'){        // one tap: sound; quick double tap: show / hide 词性+释义
       const now=Date.now(), lt=S.ltap||{};
-      if(lt.w===w && now-lt.t<400){ S.pshow = S.pshow===w ? null : w; S.ltap={}; }
+      markReading(row); S.rd=w;
+      if(S.pshow===w){ S.pshow=null; S.ltap={}; speak(w, row.querySelector('.say')); }          // meaning showing: one tap hides it
+      else if(lt.w===w && now-lt.t<400){ S.pshow=w; S.ltap={}; }                                 // quick double tap: show it
       else { speak(w, row.querySelector('.say')); if(S.pshow && S.pshow!==w) S.pshow=null; S.ltap={w,t:now}; }
       app.querySelectorAll('#words .pm').forEach(m=>{ m.hidden = m.closest('.w').dataset.w!==S.pshow; });
       return;
     }
-    speak(w, row.querySelector('.say')); return;
+    markReading(row); speak(w, row.querySelector('.say')); return;
   }
   const yes=e.target.closest('.mark.yes'), no=e.target.closest('.mark.no');
   if(!yes && !no) return;
@@ -6210,15 +6309,16 @@ function renderLearning(){
   document.getElementById('grp').onchange=e=>{ G.page=+e.target.value; renderLearning(); };
   document.getElementById('toCut').onclick=()=>cutStart(groupWords(G.page));
   document.querySelectorAll('.card[data-w]').forEach(c=>c.onclick=()=>{
-    // one tap: pronounce (and hide any other word's meaning); quick double tap: show / hide this word's meaning
-    const w=c.dataset.w, now=Date.now(), lt=G.ltap||{};
-    if(lt.w===w && now-lt.t<400){ G.lshow = G.lshow===w ? null : w; G.ltap={}; }
-    else { speak(w,c); FX.jelly(c); if(G.lshow && G.lshow!==w) G.lshow=null; G.ltap={w,t:now}; }
+    // every tap reads the word; on the same word the meaning alternates: 1 sound · 2 sound+中文 · 3 sound · 4 sound+中文 …
+    const w=c.dataset.w;
+    if(G.lw===w) G.lshow = G.lshow===w ? null : w; else { G.lw=w; G.lshow=null; }
+    speak(w,c); FX.jelly(c); markReading(c);
     document.querySelectorAll('.card[data-w]').forEach(x=>{ x.querySelector('.m').hidden = x.dataset.w!==G.lshow; });
   });
   FX.popIn(app.querySelectorAll('.card[data-w]'));
+  if(G.lw){ const rc=document.querySelector(`.card[data-w="${CSS.escape(G.lw)}"]`); if(rc) rc.classList.add('reading'); }
   const box=document.getElementById('cards'); let x0=null,y0=null;
-  box.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+  box.addEventListener('touchstart',e=>{ if(e.target.closest('.card[data-w]')){x0=null;return;} x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
   box.addEventListener('touchend',e=>{ if(x0===null) return; const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0; x0=null;
     if(Math.abs(dx)>60 && Math.abs(dx)>Math.abs(dy)*1.5){ if(dx<0 && G.page<G.pages-1){G.page++;renderLearning()} else if(dx>0 && G.page){G.page--;renderLearning()} } },{passive:true});
 }
@@ -6230,11 +6330,11 @@ const colorOf = w => G.words.indexOf(w)%PER+1;
 function shuffle(a){ a=[...a]; for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]} return a; }
 function cutStart(words, mix){
   G.view='cut'; G.mix=mix||null; G.cutAll=[...words]; G.cutQ=mix?shuffle(words):[...words];
-  G.cshow=null; G.ctap={}; G.picking=false; G.enter=null; G.cele=0; G.popCut=1; renderLearning();
+  G.cshow=null; G.ctap={}; G.cw=null; G.picking=false; G.enter=null; G.cele=0; G.popCut=1; renderLearning();
 }
 function cutCardHTML(w){
   return `<div class="card cutcard${G.enter===w?' enter':''}" data-w="${esc(w)}" style="--c:var(--b${colorOf(w)})">
-    <button class="cc-main" aria-label="${esc(w)}，双击看释义"><span class="t">${esc(w)}</span><span class="m"${G.cshow===w?'':' hidden'}>${esc((cur.defs||{})[w]||'暂无释义')}</span></button>
+    <button class="cc-main" aria-label="${esc(w)}，再点一下看中文"><span class="t">${esc(w)}</span><span class="m"${G.cshow===w?'':' hidden'}>${esc((cur.defs||{})[w]||'暂无释义')}</span></button>
     <button class="scissor" aria-label="剪掉 ${esc(w)}">${ICON_CUT}</button></div>`;
 }
 function renderCut(){
@@ -6261,7 +6361,7 @@ function renderCut(){
   }
   const title = G.mix ? '混组检查' : '剪纸盒';
   app.innerHTML = `<section class="learn cutmode${G.mix?' mixmode':''}"><div class="learn-in">
-    <p class="hint-s cut-hint">点一下听发音，双击看释义，记住了就点剪刀剪掉</p>
+    <p class="hint-s cut-hint">点单词听发音，再点一下看中文，记住了就点剪刀剪掉</p>
     <header class="top"><button class="back" id="cBack">‹ 返回学习</button><h2>${title}</h2><span class="sub" style="min-width:56px;text-align:right">${G.picking?'':`还剩 <b class="num">${left}</b>`}</span></header>
     ${body}
     <div class="foot"><button class="btn sm l mixbtn" id="toMix" ${G.picking?'disabled':''}>混组检查</button>${groupSelect()}<button class="act" id="fin" style="justify-self:end">完成学习</button></div>
@@ -6286,9 +6386,8 @@ function renderCut(){
   document.querySelectorAll('.cutcard').forEach(card=>{
     const w=card.dataset.w;
     card.querySelector('.cc-main').onclick=()=>{
-      const now=Date.now(), lt=G.ctap||{};
-      if(lt.w===w && now-lt.t<400){ G.cshow = G.cshow===w ? null : w; G.ctap={}; }
-      else { speak(w, card); FX.jelly(card); if(G.cshow && G.cshow!==w) G.cshow=null; G.ctap={w,t:now}; }
+      if(G.cw===w) G.cshow = G.cshow===w ? null : w; else { G.cw=w; G.cshow=null; }
+      speak(w, card); FX.jelly(card); markReading(card);
       document.querySelectorAll('.cutcard').forEach(x=>{ x.querySelector('.m').hidden = x.dataset.w!==G.cshow; });
     };
     card.querySelector('.scissor').onclick=()=>{
@@ -6333,7 +6432,7 @@ function renderFinal(){
     <header class="top"><button class="back" id="fnBack">‹ 返回学习</button><h2>${G.kind==='rev'?'复习后检测':'最后检查'}</h2><span class="sub" style="min-width:56px;text-align:right">共 ${G.words.length} 词</span></header>
     <div class="prog"><i style="width:${Object.keys(G.judge).length/G.words.length*100}%"></i></div>
   </div>
-  <p class="intro">${G.kind==='rev'?'今天复习时遗忘的单词都在这里，逐个判断是否记住。记住的进入下一个词盒，又忘记的回到生词库。':'本节课的单词全部在这里，逐个判断是否记住。遗忘的词会回到生词库，下次选词时排在最前面。'}点单词听发音，双击看释义。</p>
+  <p class="intro">${G.kind==='rev'?'今天复习时遗忘的单词都在这里，逐个判断是否记住。记住的进入下一个词盒，又忘记的回到生词库。':'本节课的单词全部在这里，逐个判断是否记住。遗忘的词会回到生词库，下次选词时排在最前面。'}点单词听发音，双击看释义，再点一下收起。</p>
   <div class="words" id="fwords">${G.words.map(finalRow).join('')}</div>
   <div class="bottom"><span class="tally">${finalTally()}</span><button class="btn primary" id="fnDone" ${all?'':'disabled'}>${G.kind==='rev'?'完成复习':'完成学习'}</button></div>`;
   document.getElementById('fnBack').onclick=()=>{ G.view='list'; renderLearning(); };
@@ -6341,11 +6440,12 @@ function renderFinal(){
   FX.popIn(app.querySelectorAll('#fwords .w'));
   document.getElementById('fwords').onclick=e=>{
     const row=e.target.closest('.w'); if(!row) return; const w=row.dataset.w;
-    speak(w, row.querySelector('.say'));
+    speak(w, row.querySelector('.say')); markReading(row); G.frd=w;
     const b=e.target.closest('.jb');
     if(!b){ // double tap on the word box toggles 词性 + 释义
       const now=Date.now(); G.fshow=G.fshow||new Set(); G.ftap=G.ftap||{};
-      if(G.ftap.w===w && now-G.ftap.t<380){
+      if(G.fshow.has(w)){ G.fshow.delete(w); row.querySelector('.fm').hidden=true; G.ftap={}; }   // showing: one tap hides it
+      else if(G.ftap.w===w && now-G.ftap.t<380){
         G.fshow.has(w)?G.fshow.delete(w):G.fshow.add(w);
         row.querySelector('.fm').hidden=!G.fshow.has(w); G.ftap={};
       } else G.ftap={w,t:now};
@@ -6354,7 +6454,7 @@ function renderFinal(){
     const want=b.classList.contains('ok')?'ok':'ng';
     if(G.judge[w]===want) delete G.judge[w]; else G.judge[w]=want;
     const j=G.judge[w];
-    row.className='w fj'+(j?' is-'+j:'');
+    row.className='w fj'+(j?' is-'+j:'')+(G.frd===w?' reading':'');
     row.querySelector('.jb.ok').setAttribute('aria-pressed',j==='ok');
     row.querySelector('.jb.ng').setAttribute('aria-pressed',j==='ng');
     const n=Object.keys(G.judge).length;
@@ -6381,9 +6481,10 @@ function finishLearning(){
     <div class="done"><div class="celebrate-row">${mascotSVG()}</div>${STARS}
     <h3>这一批单词学完了！</h3><p>掌握 ${okw.length} 个，已放入「初出茅庐」，明天先复习它们。${ng.length?`<br>遗忘 ${ng.length} 个，已放回生词库，下次选词时排在最前面。`:''}</p>
     ${ng.length?`<div class="label">遗忘的单词（点一下听发音）</div><div class="today-list">${ng.map(w=>`<button data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>`:''}
-    ${more?'<button class="btn" id="again">再选一批新词</button>':''}<button class="btn primary" id="fLib">回到词库</button></div>`;
+    ${more?'<button class="btn" id="again">再选一批新词</button>':''}${(stu.dist||[]).length?`<button class="btn" id="toDist">区分本（${stu.dist.length}）</button>`:''}<button class="btn primary" id="fLib">回到词库</button></div>`;
   FX.levelClear({big:true, voiceText:'Excellent! You did it'});
   document.getElementById('fBack').onclick=document.getElementById('fLib').onclick=()=>openLib(cur);
+  const td=document.getElementById('toDist'); if(td){ const lb=cur; td.onclick=()=>distPage(()=>openLib(lb)); }
   const a=document.getElementById('again'); if(a) a.onclick=()=>startStudy('learn');
   app.querySelectorAll('.today-list button').forEach(b=>b.onclick=()=>speak(b.dataset.w,b));
 }
@@ -6401,10 +6502,12 @@ function finishReview(){
     <div class="done"><div class="celebrate-row">${mascotSVG()}</div>${STARS}
     <h3>今天的复习完成！</h3><p>重新学会 ${okw.length} 个，已和记得的单词一起进入下一个词盒。${ng.length?`<br>又忘记的 ${ng.length} 个回到生词库，之后重新学新。`:''}</p>
     ${ng.length?`<div class="label">回到生词库的单词（点一下听发音）</div><div class="today-list">${ng.map(w=>`<button data-w="${esc(w)}">${esc(w)}</button>`).join('')}</div>`:''}
-    ${freshList(cur).length?'<button class="btn primary" id="goNew">开始学习新词</button>':''}<button class="btn" id="fLib">回到词库</button></div>`;
+    ${freshList(cur).length?'<button class="btn primary" id="goNew">开始学习新词</button>':''}<button class="btn" id="fLib">回到词库</button></div>
+    ${feedbackHTML()}`;
   FX.levelClear({big:true, voiceText:'Great job'});
+  bindFeedback('relearn', {n:words.length, ok:okw.length, ng:ng.length});
   document.getElementById('fBack').onclick=document.getElementById('fLib').onclick=()=>openLib(cur);
-  const gn=document.getElementById('goNew'); if(gn) gn.onclick=()=>{ dueList(cur).length ? openLib(cur) : startStudy('learn'); };
+  const gn=document.getElementById('goNew'); if(gn) gn.onclick=()=>startStudy('learn');
   app.querySelectorAll('.today-list button').forEach(b=>b.onclick=()=>speak(b.dataset.w,b));
 }
 
@@ -6438,27 +6541,30 @@ const HUB_ICONS={
   learn:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 016.5 3H20v15H6.5A2.5 2.5 0 004 20.5z"/><path d="M4 20.5A2.5 2.5 0 016.5 18H20v3H6.5"/><path d="M9 8h7M9 11.5h5"/></svg>',
   review:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 12a8 8 0 11-2.3-5.7"/><path d="M20 4v5h-5"/><path d="M12 8v4l3 2"/></svg>',
   info:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/></svg>',
+  test:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6M10 4v5l-5 9a2 2 0 001.7 3h10.6a2 2 0 001.7-3l-5-9V4"/><path d="M7.5 15h9"/></svg>',
   settings:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>'
 };
 function studentHub(){
   if(!stu) return studentsHome();
   cur=null; S=null; G=null; AFS=null; REP=null; window.scrollTo(0,0);
   const boxDue=libs.reduce((a,l)=>a+stats(l).dueAll,0), afN=afDueAll().length;
-  const tile=(id,cls,icon,t,sub)=>`<button class="hub-tile ${cls}" id="${id}"><span class="hi">${HUB_ICONS[icon]}</span><b>${t}</b><span class="hs">${sub}</span></button>`;
-  app.innerHTML=`<header class="top"><button class="back" id="toStu">‹ 学员</button><h2>${esc(stu.name)}</h2><span style="width:48px"></span></header>
+  const tile=(id,cls,icon,t,sub)=>`<button class="hub-tile ${cls}" id="${id}"><span class="hi">${HUB_ICONS[icon]}</span><span class="ht"><b>${t}</b><span class="hs">${sub}</span></span><span class="hc" aria-hidden="true">›</span></button>`;
+  const vt=stu.vtest||[], vl=vt[vt.length-1];
+  const sm=isStuMode();
+  app.innerHTML=`<header class="top">${sm?'<span style="width:48px"></span>':'<button class="back" id="toStu">‹ 学员</button>'}<h2>${esc(stu.name)}</h2><span style="width:48px"></span></header>
     ${simNote()}
+    ${stu.cloud?'<div id="cloudLine" class="cloud-line"></div>':''}
     <div class="hub">
       ${tile('hubLearn','t-learn','learn','进入学习', libs.length?`${libs.length} 个词库${boxDue?` · 词盒待复习 ${boxDue}`:''}`:'还没有开通词库')}
       ${tile('hubReview','t-review','review','进入复习', afN?`今日抗遗忘 ${afN} 词`:'今天没有抗遗忘任务')}
-      ${tile('hubInfo','t-info','info','学员信息', esc(stu.note||'姓名、风格、开通词库'))}
-      ${tile('hubSet','t-set','settings','设置','发音、音效、备课')}
-    </div>
-    <button class="vt-entry" id="hubVT"><b>词汇量测试</b><span>${(stu.vtest||[]).length?`上次 ${stu.vtest[stu.vtest.length-1].est} 词 · ${ymd(stu.vtest[stu.vtest.length-1].t)}`:'四选一，5–8 分钟测出词汇量'}</span></button>`;
-  FX.popIn(app.querySelectorAll('.hub-tile,.vt-entry'));
-  document.getElementById('toStu').onclick=studentsHome;
+      ${tile('hubVT','t-info','test','词汇量测试', vl?`上次 ${vl.est} 词 · ${ymd(vl.t)}`:'四选一，5–8 分钟测出词汇量')}
+      ${tile('hubSet','t-set','settings','设置', sm?'发音、音效、退出登录':'学员信息、开通词库、发音、备课')}
+    </div>`;
+  FX.popIn(app.querySelectorAll('.hub-tile'));
+  const ts=document.getElementById('toStu'); if(ts) ts.onclick=studentsHome;
   document.getElementById('hubLearn').onclick=()=>home();
+  if(stu.cloud){ cloudUI(); const me=stu; cloudSync(me).then(ch=>{ if(ch && stu===me && document.querySelector('.hub')) studentHub(); }); }
   document.getElementById('hubReview').onclick=reviewHome;
-  document.getElementById('hubInfo').onclick=infoPage;
   document.getElementById('hubSet').onclick=settingsPage;
   document.getElementById('hubVT').onclick=vtHome;
 }
@@ -6481,11 +6587,12 @@ function home(){
   ${simNote()}
   ${libs.length?'':'<div class="empty-libs">还没有开通词库。<button class="btn sm primary" id="goInfo">去学员信息开通词库</button></div>'}
   <div class="libs">${cards}</div>
-  <button class="btn" id="goReports" style="align-self:center">课堂报告${reports.length?`（${reports.length}）`:''}${lesson?' · 正在上课':''}</button>`;
+  <div class="learn-links"><button class="btn" id="goReports">课堂报告${reports.length?`（${reports.length}）`:''}${lesson?' · 正在上课':''}</button><button class="btn" id="goDist">区分本${(stu.dist||[]).length?`（${stu.dist.length}）`:''}</button></div>`;
   FX.popIn(app.querySelectorAll('.lib'));
   app.querySelectorAll('.lib').forEach(b=>b.onclick=()=>openLib(libs.find(l=>l.id===b.dataset.lib)));
   document.getElementById('toHub').onclick=studentHub;
   document.getElementById('goReports').onclick=()=>openReports(null);
+  document.getElementById('goDist').onclick=()=>distPage(home);
   const gi=document.getElementById('goInfo'); if(gi) gi.onclick=infoPage;
 }
 
@@ -6493,7 +6600,7 @@ function home(){
 function infoPage(){
   if(!stu) return studentsHome();
   window.scrollTo(0,0);
-  app.innerHTML=`<header class="top"><button class="back" id="toHub">‹ ${esc(stu.name)}</button><h2>学员信息</h2><span style="width:48px"></span></header>
+  app.innerHTML=`<header class="top"><button class="back" id="toHub">‹ 设置</button><h2>学员信息</h2><span style="width:48px"></span></header>
   ${simNote()}
   <div class="panel page-panel"><div class="form">
       <input id="stuName" value="${esc(stu.name)}" placeholder="昵称或姓名">
@@ -6506,9 +6613,10 @@ function infoPage(){
       <input id="impName" placeholder="词库名称，例如：考研核心词 第1册">
       <textarea id="impText" placeholder="每行一个单词，后面跟词性和释义，例如：&#10;abandon v. 放弃；抛弃&#10;ability n. 能力&#10;take off 起飞；脱下&#10;&#10;没有释义也可以导入。"></textarea>
       <button class="btn" id="impSave">导入并开通</button>
+      ${cloudSectionHTML()}
       <button class="btn sm danger" id="stuDel" style="align-self:center">删除这位学员</button>
   </div></div>`;
-  document.getElementById('toHub').onclick=studentHub;
+  document.getElementById('toHub').onclick=settingsPage;
   app.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{
     const id=b.dataset.cat, on=libs.some(l=>l.id===id);
     if(on){
@@ -6533,6 +6641,7 @@ function infoPage(){
     const nd=Object.keys(defs).length;
     toast(`已导入 ${words.length} 个单词${nd?`，其中 ${nd} 个带释义`:'（没有识别到释义）'}`);
   };
+  bindCloudSection(infoPage);
 }
 
 /* 设置 */
@@ -6541,6 +6650,7 @@ function settingsPage(){
   window.scrollTo(0,0);
   app.innerHTML=`<header class="top"><button class="back" id="toHub">‹ ${esc(stu.name)}</button><h2>设置</h2><span style="width:48px"></span></header>
   ${simNote()}
+  ${isStuMode()?'':`<button class="set-link" id="goInfo"><span><b>学员信息</b><small>${esc(stu.name)}${stu.note?' · '+esc(stu.note):''} · 已开通 ${libs.length} 个词库</small></span><i aria-hidden="true">›</i></button>`}
   <div class="panel page-panel">
     <div class="row-s first"><label for="rate">发音速度</label>
       <select id="rate"><option value="0.75">慢</option><option value="0.9">标准</option><option value="1.05">快</option></select></div>
@@ -6548,11 +6658,15 @@ function settingsPage(){
     <div class="row-s"><span>试听美式发音</span><button class="btn sm" id="testVoice">播放</button></div>
     <div class="row-s"><label for="sfx">音效</label><select id="sfx"><option value="1">开</option><option value="0">关</option></select></div>
     <div class="row-s"><label for="cheer">语音夸奖（Good! Great!）</label><select id="cheer"><option value="1">开</option><option value="0">关</option></select></div>
-    <div class="row-s"><span>备课<small class="row-sub">操作只临时保存，退出后全部还原</small></span>${prepOn()?'<button class="btn sm danger" id="prepEnd">退出备课</button>':'<button class="btn sm" id="prepStart">开始备课</button>'}</div>
+    ${isStuMode()?`<div class="row-s"><span>当前账号<small class="row-sub">${esc((MODE()||{}).account||'')}</small></span><button class="btn sm danger" id="logout">退出登录</button></div>`:''}
+    <div class="row-s tonly"><span>备课<small class="row-sub">操作只临时保存，退出后全部还原</small></span>${prepOn()?'<button class="btn sm danger" id="prepEnd">退出备课</button>':'<button class="btn sm" id="prepStart">开始备课</button>'}</div>
     ${prepOn()?'<div class="row-s"><span>备课时模拟日期</span><span style="display:flex;gap:6px"><button class="btn sm" id="simNext">往后 1 天</button><button class="btn sm" id="simReset">回到今天</button></span></div>':''}
     <div class="hint" style="padding:6px 0 14px">添加到 iPhone 主屏幕：用 Safari 打开，点「分享」→「添加到主屏幕」。<br>没有声音时，检查侧边静音开关和媒体音量。</div>
   </div>`;
   document.getElementById('toHub').onclick=studentHub;
+  const gI=document.getElementById('goInfo'); if(gI) gI.onclick=infoPage;
+  const lo=document.getElementById('logout');
+  if(lo) lo.onclick=()=>{ if(!lo.classList.contains('arm')){ lo.classList.add('arm'); lo.textContent='再点一次退出'; setTimeout(()=>{ if(lo.isConnected){ lo.classList.remove('arm'); lo.textContent='退出登录'; } },3000); return; } logoutStudent(); };
   const rate=document.getElementById('rate'); rate.value=String(settings.rate);
   rate.onchange=()=>{settings.rate=+rate.value;save()};
   document.getElementById('testVoice').onclick=()=>speak(settings.voiceSrc==='tts'?'Hello, this is American English.':'wonderful');
@@ -6586,8 +6700,8 @@ function afPlanAll(){
   const max=Math.max(...cnt), WK='日一二三四五六', t=today();
   const lab=i=> i===0?'今天':(i===1?'明天':'周'+WK[new Date((t+i-(settings.offset||0))*864e5).getUTCDay()]);
   return `<div class="af-plan"><div class="afp-h"><b>抗遗忘复习计划</b><span>未来 7 天共 ${cnt.reduce((a,b)=>a+b,0)} 词次</span></div>
-    <div class="afp">${cnt.map((n,i)=>`<div class="afd${i===0?' today':''}"><span class="n num">${n}</span><div class="bt"><i style="height:${max?Math.max(n?8:0,n/max*100):0}%"></i></div><span class="d">${lab(i)}</span></div>`).join('')}</div>
-    <p class="afp-note">按 21 天记忆曲线预计（每个新词共推送 10 次），假设每天都完成复习；不含之后新学的单词。</p></div>`;
+    <div class="afp">${cnt.map((n,i)=>`<button class="afd${i===0?' today':''}" data-day="${i}" data-lab="${lab(i)}" aria-label="${lab(i)} ${n} 个单词，点开查看"><span class="n num">${n}</span><div class="bt"><i style="height:${max?Math.max(n?8:0,n/max*100):0}%"></i></div><span class="d">${lab(i)}</span></button>`).join('')}</div>
+    <p class="afp-note">点方块可以看到当天要复习的单词。按 21 天记忆曲线预计（每个新词共推送 10 次），假设每天都完成复习；不含之后新学的单词。</p></div>`;
 }
 function reviewHome(){
   if(!stu) return studentsHome();
@@ -6602,19 +6716,20 @@ function reviewHome(){
   FX.popIn(app.querySelectorAll('.go-card,.af-plan,.task'));
   document.getElementById('toHub').onclick=studentHub;
   document.getElementById('goAF').onclick=startAF;
+  app.querySelectorAll('.afp .afd[data-day]').forEach(b=>b.onclick=()=>showDayWords(+b.dataset.day, b.dataset.lab));
 }
 
 let AFS=null;   // live session — never saved until it is finished
 function startAF(){
   const items=afDueAll(); if(!items.length) return;
-  S=null; G=null; AFS={items, res:{}};
+  S=null; G=null; AFS={items, res:{}, show:new Set()};
   renderAF(); window.scrollTo(0,0);
 }
 function afRow(it, i){
-  const r=AFS.res[i], def=(it.lib.defs||{})[it.w]||'暂无释义';
-  return `<div class="afr${r?' is-'+r:''}" data-i="${i}">
-    <button class="afw" aria-label="朗读 ${esc(it.w)}"><span class="t">${esc(it.w)}</span>${r?`<span class="m">${esc(def)}</span>`:''}</button>
-    <button class="afb ok" aria-label="记得" ${r?'disabled':''}>${ICON_YES}</button><button class="afb ng" aria-label="忘了" ${r?'disabled':''}>${ICON_NO}</button></div>`;
+  const r=AFS.res[i], def=(it.lib.defs||{})[it.w]||'暂无释义', sh=r && AFS.show.has(i);
+  return `<div class="afr${r?' is-'+r:''}${AFS.rd===i?' reading':''}" data-i="${i}">
+    <button class="afw" aria-label="朗读 ${esc(it.w)}"><span class="t">${esc(it.w)}</span>${sh?`<span class="m">${esc(def)}</span>`:''}</button>
+    <button class="afb ok" aria-label="记得" aria-pressed="${r==='ok'}">${ICON_YES}</button><button class="afb ng" aria-label="忘了" aria-pressed="${r==='ng'}">${ICON_NO}</button></div>`;
 }
 function afTally(){
   const v=Object.values(AFS.res), ok=v.filter(x=>x==='ok').length;
@@ -6639,17 +6754,19 @@ function renderAF(){
   document.getElementById('aflist').onclick=e=>{
     const row=e.target.closest('.afr'); if(!row) return; const i=+row.dataset.i, it=AFS.items[i];
     const b=e.target.closest('.afb');
-    if(!b){ speak(it.w, row.querySelector('.afw')); return; }
-    if(AFS.res[i]) return;                       // no take-backs
-    const ok=b.classList.contains('ok'); AFS.res[i]=ok?'ok':'ng';
+    AFS.rd=i;
+    if(!b){ speak(it.w, row.querySelector('.afw')); markReading(row); return; }
+    const want=b.classList.contains('ok')?'ok':'ng', was=AFS.res[i];
+    if(was===want){ AFS.show.has(i)?AFS.show.delete(i):AFS.show.add(i); row.outerHTML=afRow(it,i); return; }   // same button: show / hide 中文
+    AFS.res[i]=want; AFS.show.add(i);                                                                           // new or changed answer: 中文 stays visible
     row.outerHTML=afRow(it,i);
-    ok?FX.good(null,{praise:false}):FX.soft(null);
+    want==='ok'?FX.good(null,{praise:false}):FX.soft(null);
     const k=Object.keys(AFS.res).length;
     document.getElementById('afCount').textContent=`${k}/${AFS.items.length}`;
     app.querySelector('.prog i').style.width=(k/AFS.items.length*100)+'%';
     document.getElementById('afTally').innerHTML=afTally();
     document.getElementById('afDone').disabled = k<AFS.items.length;
-    if(k===AFS.items.length) toast('全部完成，点「完成」查看结果');
+    if(k===AFS.items.length && !was) toast('全部完成，点「完成」查看结果');
   };
 }
 function finishAF(){
@@ -6668,9 +6785,11 @@ function finishAF(){
   </div>
   <div class="task"><div class="label">过去 7 天正确率</div><div class="week7">${week7HTML()}</div></div>
   ${ng.length?`<div class="task"><div class="label">遗忘的单词（点一下听发音）</div><div class="forgot-list">${ng.map(it=>`<button class="fg" data-w="${esc(it.w)}"><b>${esc(it.w)}</b><span>${esc((it.lib.defs||{})[it.w]||'暂无释义')}</span></button>`).join('')}</div></div>`:'<div class="task"><p>这次没有遗忘的单词，全部记得！</p></div>'}
+  ${feedbackHTML()}
   <button class="btn primary" id="afLib" style="align-self:center">返回复习</button>`;
   FX.popIn(app.querySelectorAll('.af-sum>div,.task'));
   document.getElementById('afBack').onclick=document.getElementById('afLib').onclick=reviewHome;
+  bindFeedback('af', {n:items.length, ok, ng:ng.length});
   app.querySelectorAll('.fg').forEach(b=>b.onclick=()=>speak(b.dataset.w,b));
   if(rate>=80) FX.levelClear({voiceText: rate===100?'Perfect':'Great job'});
 }
@@ -6679,22 +6798,40 @@ function finishAF(){
 const VT_PER = 6;                                   // questions per level
 const VT_SHORT = {pep7a:'七上',pep7b:'七下',pep8a:'八上',pep8b:'八下',pep9a:'九上',pep9b:'九下',hsb1:'必修一',hsb2:'必修二',hsb3:'必修三',hsx1:'选必一',hsx2:'选必二',hsx3:'选必三',hsx4:'选必四'};
 let _vtBank=null;
+// names, places, nationalities, holidays… start with a capital or are glossed as one — easy to spot, so leave them out
+const vtProper = (w,d) => (/^[A-Z]/.test(w) && w!=='I' && !/[?!.'’\-]/.test(w)) || /人名|地名|城市|国名|(英国|美国|中国|澳大利亚|加拿大)[^；]*?(城市|州|地区|大学|河|山)|男子名|女子名|姓氏/.test(d||'');
 function vtBank(){                                   // every word counted once, at the earliest book it appears in
   if(_vtBank) return _vtBank;
   const seen=new Set();
   _vtBank=Object.keys(VT_SHORT).filter(id=>PRESET_TEXT[id]).map(id=>{
     const L=PRESET_LIB(id), words=[];
-    L.words.forEach(w=>{ const k=w.toLowerCase(); if(seen.has(k)) return; seen.add(k); words.push(w); });
+    L.words.forEach(w=>{ const k=w.toLowerCase(); if(seen.has(k)) return; seen.add(k); if(!vtProper(w, L.defs[w])) words.push(w); });
     return {id, name:L.name, short:VT_SHORT[id], words, defs:L.defs};
   });
   return _vtBank;
 }
-const vtPos = d => ((d||'').match(/^([a-z]+\.(?:\s*&\s*[a-z]+\.)*)/i)||['',''])[1].split(/[&.\s]+/)[0].toLowerCase();
+const vtPosKey = d => ((d||'').match(/^((?:[a-z]+\.\s*(?:&\s*)?)+)/i)||['',''])[1].replace(/\s+/g,'').toLowerCase();
+const vtPos = d => vtPosKey(d).split(/[&.]/)[0];
+const vtCore = d => (d||'').replace(/^((?:[a-z]+\.\s*(?:&\s*)?)+)/i,'').replace(/[（(][^）)]*[）)]|\[[^\]]*\]|[…\.]+/g,'');
+const vtBits = d => vtCore(d).split(/[；;，,、\s]+|[a-z]+\./i).map(x=>x.replace(/[的地得了]$/,'').trim()).filter(x=>x.length>=2);
+function vtOverlap(a,b){ const A=vtBits(a), B=vtCore(b); return A.some(x=>B.includes(x)) || vtBits(b).some(x=>vtCore(a).includes(x)); }
 function vtQuestion(lv, w){
-  const d=lv.defs[w], pos=vtPos(d), pool=shuffle(lv.words.filter(x=>x!==w && lv.defs[x] && lv.defs[x]!==d));
-  const same=pool.filter(x=>vtPos(lv.defs[x])===pos), opts=[d];
-  for(const x of [...same, ...pool]){ const dx=lv.defs[x]; if(!opts.includes(dx)) opts.push(dx); if(opts.length===4) break; }
-  return {w, lv:lv.id, ans:d, opts:shuffle(opts)};
+  const bank=vtBank(), li=bank.indexOf(lv), d=lv.defs[w], pk=vtPosKey(d), p0=vtPos(d), phrase=/\s/.test(w), len=vtCore(d).length;
+  const pool=[];
+  bank.forEach((L,j)=>{ if(Math.abs(j-li)>1) return; L.words.forEach(x=>{ const dx=L.defs[x]; if(x===w || !dx || dx===d) return; pool.push({x,dx,near:j===li}); }); });
+  const scored=pool.map(c=>{
+    const ck=vtPosKey(c.dx), cphr=/\s/.test(c.x);
+    let sc = (ck===pk?0 : vtPos(c.dx)===p0?3 : 12) + (cphr===phrase?0:8) + Math.abs(vtCore(c.dx).length-len)/3 + (c.near?0:1.5) + Math.random()*3;
+    return {...c, sc};
+  }).sort((a,b)=>a.sc-b.sc);
+  const opts=[d];
+  for(const c of scored){
+    if(opts.length===4) break;
+    if(opts.includes(c.dx) || opts.some(o=>vtOverlap(o,c.dx))) continue;   // never two answers that could both be right
+    opts.push(c.dx);
+  }
+  const clean = x => x.replace(/\[[^\]]*\]/g,'').replace(/\s+/g,' ').trim();   // tags like [药] would give the answer away
+  return {w, lv:lv.id, ans:clean(d), opts:shuffle(opts.map(clean))};
 }
 let VT=null;
 function vtHome(){
@@ -6705,8 +6842,8 @@ function vtHome(){
   ${simNote()}
   <div class="task vt-intro">
     <div class="label">怎么测</div>
-    <p>从七年级上册到选择性必修第四册，每一册随机抽 ${VT_PER} 个单词，给出 4 个中文意思选一个。不认识就点「不认识」，别乱猜，结果更准。</p>
-    <p class="vt-small">共 ${bank.length} 册、约 ${total} 个不重复单词。连续两册几乎都不认识时会提前结束，一般 5–8 分钟。</p>
+    <p>从七年级上册到选择性必修第四册，每一册随机抽 ${VT_PER} 个单词（拿不准的册会再加 4 题），给出 4 个中文意思选一个。不认识就点「不认识」，别乱猜，结果更准。</p>
+    <p class="vt-small">共 ${bank.length} 册、约 ${total} 个不重复单词。连续两册几乎都不认识时会自动结束，中途也可以点「结束测试」。人名、地名不出题。</p>
     <button class="btn primary" id="vtGo">开始测试</button>
   </div>
   ${last?`<div class="task"><div class="label">历次结果</div>
@@ -6718,7 +6855,7 @@ function vtHome(){
 }
 function vtStart(){
   const bank=vtBank();
-  VT={li:0, qs:[], i:0, res:bank.map(l=>({id:l.id, n:0, c:0, w:0, u:0, skipped:false})), wrong:[], t:Date.now(), busy:false};
+  VT={li:0, qs:[], i:0, res:bank.map(l=>({id:l.id, n:0, c:0, w:0, u:0, skipped:false, ext:false})), wrong:[], t:Date.now(), busy:false};
   vtLoadLevel(); vtRender(); window.scrollTo(0,0);
 }
 function vtLoadLevel(){
@@ -6736,10 +6873,16 @@ function vtRender(){
     <span class="vt-tip">点单词听发音</span>
   </div>
   <div class="vt-opts">${q.opts.map((o,k)=>`<button class="vt-opt" data-k="${k}">${esc(o)}</button>`).join('')}</div>
-  <button class="btn vt-skip" id="vtSkip">不认识</button>`;
+  <button class="btn vt-skip" id="vtSkip">不认识</button>
+  ${done?'<button class="vt-end" id="vtEnd">结束测试，查看结果</button>':''}`;
   document.getElementById('vtWord').onclick=e=>speak(q.w,e.currentTarget);
   app.querySelectorAll('.vt-opt').forEach(b=>b.onclick=()=>vtAnswer(b));
   document.getElementById('vtSkip').onclick=()=>vtAnswer(null);
+  const en=document.getElementById('vtEnd');
+  if(en) en.onclick=()=>{
+    if(!en.classList.contains('arm')){ en.classList.add('arm'); en.textContent='再点一次结束（没测的册按 0 计）'; setTimeout(()=>{ if(en.isConnected){ en.classList.remove('arm'); en.textContent='结束测试，查看结果'; } },3000); return; }
+    VT.early=true; VT.res.forEach(x=>{ if(!x.n) x.skipped=true; }); vtFinish();
+  };
   const ex=document.getElementById('vtExit');
   ex.onclick=()=>{
     if(done===0 || ex.classList.contains('arm')){ VT=null; vtHome(); return; }
@@ -6758,6 +6901,11 @@ function vtAnswer(btn){
   setTimeout(()=>{
     VT.busy=false; VT.i++;
     if(VT.i<VT.qs.length) return vtRender();
+    if(!r.ext && r.n===VT_PER && r.c>=2 && r.c<=4){            // not clear yet — ask 4 more from this book
+      r.ext=true; const used=new Set(VT.qs.map(q=>q.w));
+      const more=shuffle(lv.words.filter(x=>lv.defs[x] && !used.has(x))).slice(0,4).map(x=>vtQuestion(lv,x));
+      if(more.length){ VT.qs=VT.qs.concat(more); return vtRender(); }
+    }
     // level finished — stop early after two levels in a row with at most one right answer
     const prev=VT.res[VT.li-1];
     if(r.c<=1 && prev && prev.c<=1){ VT.res.slice(VT.li+1).forEach(x=>x.skipped=true); return vtFinish(); }
@@ -6775,7 +6923,7 @@ function vtFinish(){
   const levelTxt = reach<0 ? '七年级上册还没有掌握' : `基本掌握到${levels[reach].short}`;
   const recI = levels.findIndex(l=>l.p<0.8);
   const rec = recI<0 ? null : {id:levels[recI].id, name:levels[recI].name};
-  const rep={id:'V'+Date.now(), t:Date.now(), est, levels, levelTxt, rec, wrong:VT.wrong, total:bank.reduce((a,l)=>a+l.words.length,0)};
+  const rep={id:'V'+Date.now(), t:Date.now(), est, levels, levelTxt, rec, wrong:VT.wrong, total:bank.reduce((a,l)=>a+l.words.length,0), early:!!VT.early};
   (stu.vtest||(stu.vtest=[])).push(rep); save(); VT=null;
   vtReport(rep.id, true);
 }
@@ -6792,7 +6940,7 @@ function vtReportHTML(r){
       <div class="rp-grid">${tile('g','答对',nC,'题')}${tile('o','答错 / 不认识',r.wrong.length,'题')}${tile('b','共答',nQ,'题')}${tile('p','题库范围',r.total,'词')}</div></div>
     <div class="rp-card"><div class="rp-sub">各册掌握情况</div>
       <div class="vt-bars">${r.levels.map(l=>`<div class="vt-row${r.rec&&r.rec.id===l.id?' rec':''}"><span class="k">${esc(l.short)}</span><div class="vt-bar"><i style="width:${l.p*100}%"></i></div><span class="v num">${l.skipped?'未测':Math.round(l.p*100)+'%'}</span></div>`).join('')}</div>
-      <p class="vt-note">掌握率已扣除蒙对的可能；「未测」的册按 0 计。</p></div>
+      <p class="vt-note">掌握率已扣除蒙对的可能；「未测」的册按 0 计。${r.early?'这次测试是中途结束的，实际词汇量可能更高。':''}</p></div>
     <div class="rp-card"><div class="rp-sub">学习建议</div>
       <p class="rp-comment">${r.rec?`建议从<b>「${esc(r.rec.name)}」</b>开始学。前面各册掌握得比较好，这一册的掌握率还不到 80%。`:'从七年级到高中选择性必修的单词都已基本掌握，可以导入更高阶的词库（如四六级、考研）。'}</p></div>
     <div class="rp-card"><div class="rp-sub">测试中错误的单词（${r.wrong.length}）</div>
@@ -6824,6 +6972,433 @@ function vtReport(id, fresh=false){
   };
 }
 
+/* ---------- 助教评语 & 复习寄语: varied wording, always editable ---------- */
+const pickOne = a => a[Math.floor(Math.random()*a.length)];
+const ST_TAGS = [
+  ['课堂状态', ['专注认真','积极主动','状态一般','有点走神','有些疲惫']],
+  ['学习表现', ['记得快','发音标准','进步明显','拼写需加强','发音需加强','词义易混']],
+  ['课后复习', ['按时复习','复习不够','需要家长督促']]
+];
+const ST_TEXT = {
+  '专注认真':['整节课注意力都很集中','听讲非常专注，跟读认真','从头到尾都很投入'],
+  '积极主动':['课上很主动，愿意开口跟读','学习积极性很高，会主动提问','主动要求多练，学习劲头足'],
+  '状态一般':['今天状态稍微平淡一些','精神头比平时弱一点'],
+  '有点走神':['中途有几次走神，提醒后能很快回来','注意力偶尔会分散，需要再集中一些'],
+  '有些疲惫':['今天看起来有点累','状态略显疲惫'],
+  '记得快':['记单词的速度很快','新词上手快，记忆效率高'],
+  '发音标准':['发音清晰标准','跟读的发音很到位'],
+  '进步明显':['和之前相比进步很明显','能看到实实在在的进步'],
+  '拼写需加强':['拼写还要多练','个别单词的拼写容易出错'],
+  '发音需加强':['部分单词的发音还要再纠正','发音上还有提升空间'],
+  '词义易混':['有几个意思相近的词容易混','词义辨析还需要加强'],
+  '按时复习':['课后复习很按时','复习习惯保持得很好'],
+  '复习不够':['课后复习的量还不太够','复习的频率要再提高一些'],
+  '需要家长督促':['课后复习需要家长帮忙督促','希望家长在家多提醒复习']
+};
+const ST_TIP = {
+  '有点走神':'下节课我们把任务拆小一点，学一组就小结一次',
+  '有些疲惫':'建议保证休息，状态好时效率会更高',
+  '状态一般':'下节课我们换种方式，让学习更有趣一些',
+  '拼写需加强':'建议每天抽 5 分钟，用「只有中文」的单词表默写',
+  '发音需加强':'建议每天跟读 5 分钟，多听真人发音',
+  '词义易混':'建议把相近的词放在一起对比着记',
+  '复习不够':'坚持每天打开「进入复习」，几分钟就能做完',
+  '需要家长督促':'每天复习只需要几分钟，坚持下来效果会很明显'
+};
+const ST_NEG = new Set(['状态一般','有点走神','有些疲惫','拼写需加强','发音需加强','词义易混','复习不够','需要家长督促']);
+function genComment(r){
+  const n=repNumbers(r), nm=r.name, st=r.status||{tags:[],note:''}, tags=st.tags||[];
+  const out=[];
+  out.push(pickOne([`${nm}今天上课 ${n.mins} 分钟`, `这节课${nm}学了 ${n.mins} 分钟`, `${nm}本节课用时 ${n.mins} 分钟`]) +
+    (n.revN||n.learnN ? '，' + [n.revN?`复习 ${n.revN} 个单词${n.revNg?`（遗忘 ${n.revNg} 个，已重新学会）`:'，全部记得'}`:'', n.learnN?`学新词 ${n.learnN} 个${n.learnNg?`，学后检测还有 ${n.learnNg} 个要再巩固`:'，学后检测全部掌握'}`:''].filter(Boolean).join('，') : '') + '。');
+  const pos=tags.filter(t=>!ST_NEG.has(t)), neg=tags.filter(t=>ST_NEG.has(t));
+  if(pos.length) out.push(pickOne(['','课堂上，','今天'])+pos.map(t=>pickOne(ST_TEXT[t])).join('，')+pickOne(['，值得表扬！','，非常棒！','，继续保持！','。']));
+  else if(!neg.length) out.push(pickOne(n.revNg===0&&n.learnNg===0?['今天的单词掌握得很扎实。','整体完成得很好，没有掉队的单词。']:['整体完成得不错，个别单词下节课再巩固。','大部分单词都记住了，剩下的几个下次重点复习。']));
+  if(neg.length){
+    out.push(pickOne(['需要注意的是，','另外，','小提醒：'])+neg.map(t=>pickOne(ST_TEXT[t])).join('，')+'。');
+    const tips=neg.map(t=>ST_TIP[t]).filter(Boolean); if(tips.length) out.push(tips.slice(0,2).join('；')+'。');
+  }
+  if(st.note && st.note.trim()) out.push(st.note.trim().replace(/[。.！!]?$/,'。'));
+  out.push(pickOne(['每天进步一点点，加油！','坚持下去，词汇量会越来越大！','期待下节课更好的表现！','继续保持这份认真，下节课见！','积少成多，你已经在路上了！']));
+  return out.join('');
+}
+function feedbackText(kind, d){
+  const rate=d.n?Math.round(d.ok/d.n*100):0;
+  const open = rate===100 ? pickOne(['太厉害了，全部都记得！','满分！一个都没忘！','完美的一次复习！'])
+    : rate>=85 ? pickOne(['记得非常牢，真棒！','正确率很高，表现很出色！','复习得很扎实！'])
+    : rate>=60 ? pickOne(['大部分都记住了，很不错！','完成得挺好，继续保持！','稳稳地完成了今天的复习！'])
+    : pickOne(['今天的复习完成了，坚持就是胜利！','遗忘是正常的，复习就是为了把它们找回来！','能坚持复习就很了不起！']);
+  const mid = kind==='af' ? `今天抗遗忘复习了 ${d.n} 个单词，记得 ${d.ok} 个${d.ng?`，忘了的 ${d.ng} 个明天还会再出现，多看两眼就好`:''}。`
+    : kind==='relearn' ? `重新学会了 ${d.ok} 个单词${d.ng?`，还有 ${d.ng} 个回到生词库，下次一起拿下`:''}。`
+    : `今天复习了 ${d.n} 个单词，全部记得，它们都升入了下一个词盒。`;
+  const end = pickOne(['明天也要按时来复习哦！','每天几分钟，单词就会越记越牢。','你的坚持老师都看在眼里，继续加油！','照这个节奏，下次会更轻松！']);
+  return open+mid+end;
+}
+function feedbackHTML(){ return `<div class="fb-card"><div class="fb-h"><b>助教寄语</b><span><button class="btn sm" id="fbNew">换一句</button><button class="btn sm" id="fbEdit">修改</button></span></div><p class="fb-text" id="fbText"></p></div>`; }
+function bindFeedback(kind, d){
+  const p=document.getElementById('fbText'); if(!p) return;
+  const fbs=stu.fbs||(stu.fbs=[]), entry={t:Date.now(), kind, text:feedbackText(kind,d)};
+  fbs.push(entry); if(fbs.length>60) fbs.splice(0,fbs.length-60); save();
+  p.textContent=entry.text;
+  document.getElementById('fbNew').onclick=()=>{ entry.text=feedbackText(kind,d); p.textContent=entry.text; save(); };
+  const ed=document.getElementById('fbEdit');
+  ed.onclick=()=>{
+    if(ed.dataset.on){ entry.text=p.textContent.trim()||entry.text; p.textContent=entry.text; p.contentEditable='false'; p.classList.remove('editing'); ed.textContent='修改'; delete ed.dataset.on; save(); toast('寄语已保存'); }
+    else { p.contentEditable='true'; p.classList.add('editing'); p.focus(); ed.textContent='保存'; ed.dataset.on='1'; }
+  };
+}
+function statusPanelHTML(r){
+  const st=r.status||{tags:[],note:''};
+  return `<div class="task st-panel"><div class="label">填写学生这节课的状态，生成助教评语</div>
+    ${ST_TAGS.map(([g,ts])=>`<div class="st-g"><span>${g}</span><div class="st-chips">${ts.map(t=>`<button class="st-chip" data-t="${t}" aria-pressed="${(st.tags||[]).includes(t)}">${t}</button>`).join('')}</div></div>`).join('')}
+    <input id="stNote" value="${esc(st.note||'')}" placeholder="补充一句（可选），例如：今天主动要求多学一组">
+    <button class="btn primary" id="stGen">${r.comment?'重新生成评语':'生成评语'}</button>
+    <p class="st-hint">每次生成的说法都不一样；生成后仍可点「修改评语」直接改。</p></div>`;
+}
+function bindStatusPanel(r, rerender){
+  const st=r.status||(r.status={tags:[],note:''});
+  app.querySelectorAll('.st-chip').forEach(b=>b.onclick=()=>{
+    const t=b.dataset.t, i=st.tags.indexOf(t); i<0?st.tags.push(t):st.tags.splice(i,1);
+    b.setAttribute('aria-pressed', i<0); lessonSave();
+  });
+  const note=document.getElementById('stNote'); note.oninput=()=>{ st.note=note.value; lessonSave(); };
+  document.getElementById('stGen').onclick=()=>{ st.note=note.value; r.comment=genComment(r); lessonSave(); rerender(); toast('评语已生成，可以继续修改'); };
+}
+
+/* html2canvas cannot read modern colour functions (color-mix, color(srgb…), oklch…): turn them into rgb() in the cloned page */
+function fixColorsForCapture(root){
+  const cv=document.createElement('canvas'); cv.width=cv.height=1; const cx=cv.getContext('2d',{willReadFrequently:true});
+  const memo={};
+  const toRGB=c=>{ if(memo[c]) return memo[c]; cx.clearRect(0,0,1,1); cx.fillStyle='#000'; cx.fillStyle=c; cx.fillRect(0,0,1,1);
+    const [r,g,b,a]=cx.getImageData(0,0,1,1).data; return memo[c]=`rgba(${r},${g},${b},${+(a/255).toFixed(3)})`; };
+  const RX=/\b(color-mix|color|oklch|oklab|lab|lch)\((?:[^()]|\((?:[^()]|\([^()]*\))*\))*\)/g;
+  const PROPS=['color','background-color','background-image','border-top-color','border-right-color','border-bottom-color','border-left-color','outline-color','box-shadow','text-shadow','text-decoration-color','fill','stroke','caret-color','column-rule-color'];
+  const win=root.ownerDocument.defaultView;
+  [root, ...root.querySelectorAll('*')].forEach(el=>{
+    const cs=win.getComputedStyle(el);
+    PROPS.forEach(pr=>{ const v=cs.getPropertyValue(pr); if(v && RX.test(v)){ RX.lastIndex=0; el.style.setProperty(pr, v.replace(RX,m=>toRGB(m)), 'important'); } RX.lastIndex=0; });
+    // gradient text (background-clip:text) is drawn as a solid bar → plain coloured text
+    if((cs.webkitBackgroundClip||cs.backgroundClip)==='text'){ el.style.setProperty('background','none','important'); el.style.setProperty('-webkit-text-fill-color','#0B6F64','important'); el.style.setProperty('color','#0B6F64','important'); }
+    // inset shadows come out as pale stripes → use a thin border of the same colour instead
+    const bs=el.style.getPropertyValue('box-shadow')||cs.boxShadow;
+    if(bs && bs.includes('inset')){
+      const m=bs.match(/rgba?\([^)]*\)/); const outer=bs.split(/,(?![^(]*\))/).filter(x=>!x.includes('inset')).join(',');
+      el.style.setProperty('box-shadow', outer||'none', 'important');
+      if(m && parseFloat(cs.borderTopWidth)===0) el.style.setProperty('border', `1.5px solid ${m[0]}`, 'important');
+    }
+  });
+  // small rounded tiles with a gradient render with a pale inner box → flat colour
+  root.querySelectorAll('.rb').forEach(el=>{ const g=el.style.getPropertyValue('background-image')||win.getComputedStyle(el).backgroundImage; const cs2=(g.match(/rgba?\([^)]*\)/g)||[]); if(cs2.length){ el.style.setProperty('background', cs2[cs2.length-1], 'important'); } el.style.setProperty('box-shadow','none','important'); });
+  root.querySelectorAll('*').forEach(el=>{ ['::before','::after'].forEach(ps=>{ const c=win.getComputedStyle(el,ps); if(c.content && c.content!=='none' && (c.backgroundImage||'').includes('gradient')) el.classList.add('h2c-noglow'); }); });
+  const st=root.ownerDocument.createElement('style'); st.textContent='.h2c-noglow::before,.h2c-noglow::after{display:none!important}'; root.ownerDocument.head.appendChild(st);
+}
+
+/* 抗遗忘复习计划: tap a day to see its words */
+function afForecastList(lib, days=7){
+  const a=AF(lib), E=afDay(lib), out=Array.from({length:days},()=>[]);
+  Object.keys(a.plan).forEach(w=>{
+    if(!lib.words.includes(w)) return;
+    const p=a.plan[w]; let k=p.k, d=Math.max(p.next,E);
+    while(k<AF_OFF.length && d-E<days){ out[d-E].push(w); k++; if(k>=AF_OFF.length) break; d=Math.max(p.base+AF_OFF[k], d+1); }
+  });
+  return out;
+}
+function showDayWords(i, label){
+  const items=[]; libs.forEach(l=>afForecastList(l,7)[i].forEach(w=>items.push({w, d:(l.defs||{})[w]||'暂无释义', lib:l.name})));
+  const o=document.createElement('div'); o.className='day-sheet';
+  o.innerHTML=`<div class="ds-in" role="dialog" aria-label="${label}要复习的单词"><div class="ds-h"><b>${label} · ${items.length} 个单词</b><button class="btn sm" id="dsClose">关闭</button></div>
+    ${items.length?`<div class="ds-list">${items.map(x=>`<button class="ds-w" data-w="${esc(x.w)}"><b>${esc(x.w)}</b><span>${esc(x.d)}</span></button>`).join('')}</div>`:'<p class="ds-empty">这一天没有要复习的单词</p>'}
+    <p class="ds-note">按每天都完成复习预计；当天忘记的词会在第二天再出现。</p></div>`;
+  document.body.appendChild(o);
+  const close=()=>o.remove();
+  o.onclick=e=>{ if(e.target===o) close(); };
+  o.querySelector('#dsClose').onclick=close;
+  o.querySelectorAll('.ds-w').forEach(b=>b.onclick=()=>{ speak(b.dataset.w,b); markReading(b); });
+}
+
+/* ---------- swipe a word left → 区分 / 词典 ;  区分本 ---------- */
+const DICT_URL = w => `https://m.youdao.com/dict?le=eng&q=${encodeURIComponent(w)}`;
+const DIST = () => stu.dist || (stu.dist=[]);
+const inDist = w => DIST().some(x=>x.w.toLowerCase()===w.toLowerCase());
+function findDef(w){                                         // look the word up in this student's libraries, then every built-in book
+  const k=w.toLowerCase();
+  for(const l of libs){ const hit=l.words.find(x=>x.toLowerCase()===k); if(hit && l.defs && l.defs[hit]) return {w:hit, d:l.defs[hit], lib:l.name}; }
+  for(const id of Object.keys(PRESET_TEXT)){ const L=PRESET_LIB(id), hit=L.words.find(x=>x.toLowerCase()===k); if(hit && L.defs[hit]) return {w:hit, d:L.defs[hit], lib:L.name}; }
+  return null;
+}
+function distAdd(w, d, libName){ if(inDist(w)) return false; DIST().push({w, d:d||'', lib:libName||'', t:Date.now(), note:''}); save(); return true; }
+function distRemove(w){ stu.dist=DIST().filter(x=>x.w.toLowerCase()!==w.toLowerCase()); save(); }
+
+let swTray=null, swEl=null, swallowClick=0;
+function closeTray(){ if(swTray){ swTray.remove(); swTray=null; } if(swEl){ swEl.classList.remove('swiped'); swEl=null; } }
+function swipeTarget(t){
+  const el=t.closest && t.closest('.card[data-w], #words .w[data-w], .afr[data-i], #fwords .w[data-w]'); if(!el) return null;
+  if(el.classList.contains('afr')){ const it=AFS&&AFS.items[+el.dataset.i]; return it?{el, w:it.w, d:(it.lib.defs||{})[it.w], lib:it.lib.name}:null; }
+  const w=el.dataset.w; return cur?{el, w, d:(cur.defs||{})[w], lib:cur.name}:null;
+}
+function openTray(hit){
+  closeTray(); swEl=hit.el; swEl.classList.add('swiped');
+  const r=hit.el.getBoundingClientRect(), on=inDist(hit.w);
+  const t=document.createElement('div'); t.className='sw-tray';
+  t.style.cssText=`top:${r.top}px;left:${r.right-148}px;height:${r.height}px`;
+  t.innerHTML=`<button class="sw-b sw-dist${on?' on':''}">${on?'已加入<br>区分本':'区分'}</button><button class="sw-b sw-dict">词典</button>`;
+  document.body.appendChild(t); swTray=t;
+  t.querySelector('.sw-dist').onclick=e=>{ e.stopPropagation();
+    if(inDist(hit.w)){ distRemove(hit.w); toast(`已从区分本移除 ${hit.w}`); }
+    else { distAdd(hit.w, hit.d, hit.lib); toast(`已加入区分本：${hit.w}`); FX.tap&&FX.tap(); }
+    closeTray(); };
+  t.querySelector('.sw-dict').onclick=e=>{ e.stopPropagation(); window.open(DICT_URL(hit.w),'_blank','noopener'); closeTray(); };
+}
+(function(){
+  let sx=null, sy=null, hit=null;
+  const start=(x,y,target)=>{ hit=swipeTarget(target); sx=x; sy=y; };
+  const end=(x,y)=>{ if(sx===null) return; const dx=x-sx, dy=y-sy; sx=null;
+    if(hit && dx<-40 && Math.abs(dx)>Math.abs(dy)*1.4){ openTray(hit); swallowClick=Date.now(); }
+    else if(swTray && dx>30 && Math.abs(dx)>Math.abs(dy)){ closeTray(); swallowClick=Date.now(); }
+    hit=null; };
+  document.addEventListener('touchstart',e=>{ if(swTray && !e.target.closest('.sw-tray')) { closeTray(); } start(e.touches[0].clientX,e.touches[0].clientY,e.target); },{passive:true,capture:true});
+  document.addEventListener('touchend',e=>end(e.changedTouches[0].clientX,e.changedTouches[0].clientY),{passive:true,capture:true});
+  document.addEventListener('mousedown',e=>{ if(swTray && !e.target.closest('.sw-tray')) closeTray(); start(e.clientX,e.clientY,e.target); },true);
+  document.addEventListener('mouseup',e=>end(e.clientX,e.clientY),true);
+  document.addEventListener('click',e=>{ if(Date.now()-swallowClick<450 && !e.target.closest('.sw-tray')){ e.stopPropagation(); e.preventDefault(); } },true);
+  window.addEventListener('scroll',()=>closeTray(),{passive:true});
+})();
+
+/* 区分本: words to tell apart, grouped automatically when their meanings overlap */
+function distGroups(){
+  const L=DIST(), seen=new Set(), groups=[];
+  L.forEach((x,i)=>{ if(seen.has(i)) return; const g=[i]; seen.add(i);
+    for(let a=0;a<g.length;a++) L.forEach((y,j)=>{ if(!seen.has(j) && L[g[a]].d && y.d && vtOverlap(L[g[a]].d, y.d)){ seen.add(j); g.push(j); } });
+    groups.push(g.map(k=>L[k])); });
+  return groups.sort((a,b)=>b.length-a.length);
+}
+function distPage(back){
+  if(!stu) return studentsHome();
+  window.scrollTo(0,0); closeTray();
+  const groups=distGroups(), n=DIST().length;
+  const item=x=>`<div class="ds-item" data-w="${esc(x.w)}">
+      <div class="dsi-top"><button class="dsi-w"><b>${esc(x.w)}</b><span>${esc(x.d||'暂无释义')}</span></button>
+        <span class="dsi-act"><a class="btn sm" href="${DICT_URL(x.w)}" target="_blank" rel="noopener">词典</a><button class="btn sm danger dsi-del">移除</button></span></div>
+      <textarea class="dsi-note" placeholder="写下和其他词的区别">${esc(x.note||'')}</textarea></div>`;
+  app.innerHTML=`<header class="top"><button class="back" id="dBack">‹ 返回</button><h2>区分本</h2><span class="sub num" style="min-width:40px;text-align:right">${n} 词</span></header>
+    <p class="intro">学习或复习时，把单词<b>向左划</b>，点「区分」就会收进这里。意思相近的词会自动放在一起，方便课上或课后对比；点「词典」可以看有道词典的完整释义。</p>
+    <div class="task ds-add"><div class="label">添加一个要对比的单词</div><div class="ds-add-row"><input id="dsNew" placeholder="例如：shame" autocapitalize="off" spellcheck="false"><button class="btn primary" id="dsAddBtn">添加</button></div></div>
+    ${groups.length?groups.map(g=>`<div class="task ds-group">${g.length>1?`<div class="label">意思相近 · 容易混淆（${g.length}）</div>`:''}${g.map(item).join('')}</div>`).join(''):'<div class="empty-libs">区分本还是空的。</div>'}`;
+  document.getElementById('dBack').onclick=back||home;
+  const addIt=()=>{ const v=document.getElementById('dsNew').value.trim(); if(!v) return;
+    const f=findDef(v); if(inDist(v)){ toast('区分本里已经有这个词了'); return; }
+    distAdd(f?f.w:v, f?f.d:'', f?f.lib:''); toast(f?`已添加 ${f.w}`:`已添加 ${v}（词库里没找到释义，可以点「词典」查）`); distPage(back); };
+  document.getElementById('dsAddBtn').onclick=addIt;
+  document.getElementById('dsNew').onkeydown=e=>{ if(e.key==='Enter') addIt(); };
+  app.querySelectorAll('.ds-item').forEach(row=>{
+    const w=row.dataset.w, ent=DIST().find(x=>x.w===w);
+    row.querySelector('.dsi-w').onclick=()=>{ speak(w,row); markReading(row); };
+    row.querySelector('.dsi-note').oninput=e=>{ ent.note=e.target.value; save(); };
+    const del=row.querySelector('.dsi-del');
+    del.onclick=()=>{ if(!del.classList.contains('arm')){ del.classList.add('arm'); del.textContent='确认'; setTimeout(()=>{ if(del.isConnected){ del.classList.remove('arm'); del.textContent='移除'; } },2500); return; } distRemove(w); distPage(back); };
+  });
+}
+
+/* ---------- 云端账号 (Supabase): teacher device ↔ parent / student phone ---------- */
+const CLOUD = Object.assign({url:'https://axwjvojlgysbtselkguv.supabase.co', key:'sb_publishable_uHHQsMWwGyxTqHgUbO2hNQ_4KbX74Rk'}, lsGet('wh.cloudcfg',{}));
+const CLOUD_KEYS = ['libs','prog','log','pend','forgot','rpend','hist','af','aflog','rounds'];
+const CLOUD_META = ['name','note','skin','vtest','dist','fbs'];
+async function rpc(fn, args){
+  const res = await fetch(`${CLOUD.url}/rest/v1/rpc/${fn}`, {method:'POST', headers:{'apikey':CLOUD.key, 'Content-Type':'application/json'}, body:JSON.stringify(args)});
+  const txt = await res.text(); let j=null; try{ j=txt?JSON.parse(txt):null; }catch(e){}
+  if(!res.ok) throw new Error((j&&(j.message||j.hint))||('HTTP '+res.status));
+  return j;
+}
+async function sha(s){ const b=await crypto.subtle.digest('SHA-256', new TextEncoder().encode('wuhe-beici:'+s)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+const MODE = () => lsGet('wh.mode', null);                       // {role:'student', account, ph, sid} on a parent's phone
+const isStuMode = () => { const m=MODE(); return !!(m && m.role==='student'); };
+const TKEY = () => lsGet('wh.tkey', '');                        // hash of the 助教密钥 on the teacher's device
+function cloudPack(st){
+  const d={v:1, meta:{}}; CLOUD_META.forEach(k=>{ if(st[k]!==undefined) d.meta[k]=st[k]; });
+  CLOUD_KEYS.forEach(k=>d[k]=lsGet(`wh.${st.id}.${k}`, k==='libs'?[]:{}));
+  return d;
+}
+let cloudApplying=false;
+function cloudApply(st, data){
+  if(!data) return;
+  cloudApplying=true;
+  CLOUD_KEYS.forEach(k=>{ if(data[k]!==undefined) lsSet(`wh.${st.id}.${k}`, data[k]); });
+  Object.assign(st, data.meta||{});
+  lsSet('wh.students', students);
+  if(stu && stu.id===st.id){ loadStudent(st); applySkin(st.skin); }
+  cloudApplying=false;
+}
+const cloudState={busy:false, err:null, at:0, syncing:false};
+let cloudTimer=null;
+const cloudSig = d => { const t=JSON.stringify(d); let h=5381; for(let i=0;i<t.length;i++) h=((h<<5)+h+t.charCodeAt(i))|0; return (h>>>0).toString(36)+':'+t.length; };
+function cloudMark(st){                                          // called from save(): queue an upload only when the data really changed
+  if(cloudApplying || !st || !st.cloud || prepOn()) return;
+  const sg=cloudSig(cloudPack(st)); if(sg===st.cloud.sig && !st.cloud.dirty) return;
+  st.cloud.dirty=true; lsSet('wh.students', students);
+  clearTimeout(cloudTimer); cloudTimer=setTimeout(()=>cloudPush(st).catch(()=>{}), 1800);
+}
+async function cloudPush(st, force){
+  if(!st || !st.cloud || prepOn()) return;
+  if(!force){                                                     // never overwrite newer data from the other phone
+    try{ const row=await cloudFetch(st); if(row && row.updated_at!==st.cloud.at){ await cloudSync(st); return; } }
+    catch(e){ cloudState.err=e.message; cloudUI(); throw e; }
+  }
+  const m=MODE(), data=cloudPack(st);
+  cloudState.busy=true; cloudUI();
+  try{
+    const at = (m && m.role==='student')
+      ? await rpc('wh_student_put', {p_account:m.account, p_pass_hash:m.ph, p_data:data})
+      : await rpc('wh_teacher_put', {p_key_hash:TKEY(), p_account:st.cloud.account, p_pass_hash:'', p_data:data});
+    st.cloud.at=at; st.cloud.dirty=false; st.cloud.sig=cloudSig(data); lsSet('wh.students', students); cloudState.err=null; cloudState.at=Date.now();
+  }catch(e){ cloudState.err=e.message; throw e; }
+  finally{ cloudState.busy=false; cloudUI(); }
+}
+async function cloudFetch(st){
+  const m=MODE();
+  if(m && m.role==='student'){ const rows=await rpc('wh_student_get', {p_account:m.account, p_pass_hash:m.ph}); return rows&&rows[0]||null; }
+  const rows=await rpc('wh_teacher_list', {p_key_hash:TKEY()}); return (rows||[]).find(r=>r.account===st.cloud.account)||null;
+}
+// returns true when newer data from the cloud was loaded
+async function cloudSync(st){
+  if(!st || !st.cloud || prepOn() || cloudState.syncing) return false;
+  cloudState.syncing=true; cloudState.busy=true; cloudUI();
+  try{
+    const row=await cloudFetch(st); cloudState.err=null;
+    if(!row){ cloudState.err='云端找不到这个账号'; return false; }
+    if(row.updated_at===st.cloud.at){ if(st.cloud.dirty) await cloudPush(st, true); cloudState.at=Date.now(); return false; }
+    if(st.cloud.dirty){                                           // both sides changed since the last sync
+      clearTimeout(cloudTimer);
+      const useCloud = await cloudAsk(st);
+      if(!useCloud){ await cloudPush(st, true); return false; }
+    }
+    clearTimeout(cloudTimer);
+    cloudApply(st, row.data); st.cloud.at=row.updated_at; st.cloud.dirty=false; st.cloud.sig=cloudSig(cloudPack(st)); lsSet('wh.students', students); cloudState.at=Date.now();
+    return true;
+  }catch(e){ cloudState.err=e.message; return false; }
+  finally{ cloudState.syncing=false; cloudState.busy=false; cloudUI(); }
+}
+function cloudAsk(st){
+  return new Promise(ok=>{
+    const o=document.createElement('div'); o.className='day-sheet';
+    o.innerHTML=`<div class="ds-in"><div class="ds-h"><b>两边都有新的记录</b></div>
+      <p class="ds-note" style="text-align:left;font-size:14px;line-height:1.6">${esc(st.name)} 的云端数据在别的手机上更新过，这台手机也有还没上传的学习记录。请选择保留哪一边：</p>
+      <button class="btn primary" id="cqCloud">用云端的（另一台手机上的）</button><button class="btn" id="cqLocal">用这台手机的</button></div>`;
+    document.body.appendChild(o);
+    o.querySelector('#cqCloud').onclick=()=>{ o.remove(); ok(true); };
+    o.querySelector('#cqLocal').onclick=()=>{ o.remove(); ok(false); };
+  });
+}
+function cloudUI(){
+  const el=document.getElementById('cloudLine'); if(!el || !stu || !stu.cloud) return;
+  el.className='cloud-line'+(cloudState.err?' err':'');
+  el.textContent = cloudState.busy ? '正在同步…' : cloudState.err ? `暂时连不上云端，稍后会再试（${cloudState.err}）` : (stu.cloud.dirty ? '有记录待上传' : `已和云端同步${cloudState.at?' · '+hhmm(cloudState.at):''}`);
+}
+window.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='hidden' && stu && stu.cloud && stu.cloud.dirty){ clearTimeout(cloudTimer); cloudPush(stu).catch(()=>{}); } });
+window.addEventListener('online',()=>{ if(stu && stu.cloud && stu.cloud.dirty) cloudPush(stu).catch(()=>{}); });
+
+/* teacher: 学员信息 → 云端账号 */
+function cloudSectionHTML(){
+  if(!TKEY()) return `<div class="sec-h">家长 / 学生账号 <small>先设定助教密钥（只设一次，换手机时用同一个）</small></div>
+    <input id="tkey" type="password" placeholder="助教密钥，至少 6 位，请牢记" autocomplete="new-password">
+    <button class="btn" id="tkeySave">保存助教密钥</button>`;
+  if(stu.cloud) return `<div class="sec-h">家长 / 学生账号 <small>已开通</small></div>
+    <div class="cloud-box"><div><span>登录账号</span><b>${esc(stu.cloud.account)}</b></div><div id="cloudLine" class="cloud-line"></div></div>
+    <p class="hint-s">把网址、账号和密码发给家长；家长在网页首页点「家长 / 学生登录」，之后孩子可以在家复习、听发音，复习记录会同步回来。</p>
+    <div class="row-btns"><button class="btn sm" id="cloudNow">立即同步</button><button class="btn sm" id="cloudPw">修改密码</button><button class="btn sm danger" id="cloudOff">注销账号</button></div>`;
+  return `<div class="sec-h">家长 / 学生账号 <small>开通后可在家长手机上复习</small></div>
+    <input id="caAcc" placeholder="登录账号：家长手机号，或自己设的字符" autocapitalize="off" spellcheck="false">
+    <input id="caPw" type="text" placeholder="登录密码，至少 6 位" autocapitalize="off" spellcheck="false">
+    <button class="btn" id="caOpen">开通云端账号</button>`;
+}
+function bindCloudSection(rerender){
+  const on=(id,f)=>{ const el=document.getElementById(id); if(el) el.onclick=f; };
+  on('tkeySave', async()=>{ const v=document.getElementById('tkey').value.trim(); if(v.length<6){ toast('助教密钥至少 6 位'); return; }
+    try{ const h=await sha('teacher:'+v); const ok=await rpc('wh_teacher_init',{p_key_hash:h}); if(!ok){ toast('助教密钥不对（云端已经设过另一个密钥）'); return; } lsSet('wh.tkey',h); toast('助教密钥已保存'); rerender(); }
+    catch(e){ toast('连不上云端：'+e.message); } });
+  on('caOpen', async()=>{
+    const acc=document.getElementById('caAcc').value.trim(), pw=document.getElementById('caPw').value.trim();
+    if(!acc){ toast('请填写登录账号'); return; } if(pw.length<6){ toast('密码至少 6 位'); return; }
+    try{
+      const rows=await rpc('wh_teacher_list',{p_key_hash:TKEY()});
+      if((rows||[]).some(r=>r.account===acc)){ toast('这个账号已经被使用了，换一个'); return; }
+      save(); const ph=await sha(acc+':'+pw);
+      const at=await rpc('wh_teacher_put',{p_key_hash:TKEY(), p_account:acc, p_pass_hash:ph, p_data:cloudPack(stu)});
+      stu.cloud={account:acc, at, dirty:false, sig:cloudSig(cloudPack(stu))}; lsSet('wh.students',students); cloudState.at=Date.now();
+      rerender(); cloudShowCreds(acc,pw);
+    }catch(e){ toast('开通失败：'+e.message); }
+  });
+  on('cloudNow', async()=>{ const ch=await cloudSync(stu); toast(cloudState.err?'同步失败：'+cloudState.err:(ch?'已下载家里的新复习记录':'已同步')); });
+  on('cloudPw', async()=>{ const pw=prompt('新的登录密码（至少 6 位）'); if(!pw) return; if(pw.trim().length<6){ toast('密码至少 6 位'); return; }
+    try{ save(); const at=await rpc('wh_teacher_put',{p_key_hash:TKEY(), p_account:stu.cloud.account, p_pass_hash:await sha(stu.cloud.account+':'+pw.trim()), p_data:cloudPack(stu)}); stu.cloud.at=at; stu.cloud.dirty=false; lsSet('wh.students',students); cloudShowCreds(stu.cloud.account, pw.trim()); }
+    catch(e){ toast('修改失败：'+e.message); } });
+  const off=document.getElementById('cloudOff');
+  if(off) off.onclick=async()=>{
+    if(!off.classList.contains('arm')){ off.classList.add('arm'); off.textContent='再点一次注销（家长将无法登录）'; setTimeout(()=>{ if(off.isConnected){ off.classList.remove('arm'); off.textContent='注销账号'; } },3000); return; }
+    try{ await rpc('wh_teacher_delete',{p_key_hash:TKEY(), p_account:stu.cloud.account}); delete stu.cloud; lsSet('wh.students',students); toast('已注销云端账号，本机数据保留'); rerender(); }
+    catch(e){ toast('注销失败：'+e.message); }
+  };
+  cloudUI();
+}
+function cloudShowCreds(acc,pw){
+  const url=location.href.split('#')[0].split('?')[0];
+  const text=`五盒背词 · 在家复习\n网址：${url}\n账号：${acc}\n密码：${pw}\n打开网址后点「家长 / 学生登录」。建议用 Safari 打开后「添加到主屏幕」。`;
+  const o=document.createElement('div'); o.className='day-sheet';
+  o.innerHTML=`<div class="ds-in"><div class="ds-h"><b>发给家长的登录信息</b><button class="btn sm" id="crClose">关闭</button></div>
+    <pre class="cred">${esc(text)}</pre><button class="btn primary" id="crCopy">复制</button>
+    <p class="ds-note">密码不会保存在这台手机上，请现在复制发给家长。</p></div>`;
+  document.body.appendChild(o);
+  o.querySelector('#crClose').onclick=()=>o.remove();
+  o.querySelector('#crCopy').onclick=async()=>{ try{ await navigator.clipboard.writeText(text); toast('已复制'); }catch(e){ toast('请长按上面的文字手动复制'); } };
+}
+
+/* parent / student phone: login, then only this one student lives on the device */
+function loginPage(){
+  stu=null; cur=null; S=null; G=null; window.scrollTo(0,0); applySkin('candy');
+  app.innerHTML=`<header class="top">${isStuMode()?'<span style="width:48px"></span>':'<button class="back" id="lgBack">‹ 返回</button>'}<h2>家长 / 学生登录</h2><span style="width:48px"></span></header>
+  <div class="task login-box">
+    <p>输入老师给的账号和密码。登录后这台手机只显示这一位学生，可以在家复习、听发音，复习记录会自动传给老师。</p>
+    <input id="lgAcc" placeholder="账号（手机号或老师给的字符）" autocapitalize="off" spellcheck="false" autocomplete="username">
+    <input id="lgPw" type="password" placeholder="密码" autocomplete="current-password">
+    <button class="btn primary" id="lgGo">登录</button>
+  </div>`;
+  const b=document.getElementById('lgBack'); if(b) b.onclick=studentsHome;
+  const go=document.getElementById('lgGo');
+  go.onclick=async()=>{
+    const acc=document.getElementById('lgAcc').value.trim(), pw=document.getElementById('lgPw').value.trim();
+    if(!acc||!pw){ toast('请填写账号和密码'); return; }
+    go.disabled=true; go.textContent='登录中…';
+    try{
+      const ph=await sha(acc+':'+pw), rows=await rpc('wh_student_get',{p_account:acc, p_pass_hash:ph}), row=rows&&rows[0];
+      if(!row){ toast('账号或密码不对'); return; }
+      const sid='c'+(await sha('sid:'+acc)).slice(0,10);
+      let st=students.find(x=>x.id===sid); if(!st){ st={id:sid, name:'学生'}; students.push(st); }
+      st.cloud={account:acc, at:null, dirty:false};
+      lsSet('wh.mode',{role:'student', account:acc, ph, sid});
+      cloudApply(st, row.data); st.cloud.at=row.updated_at; st.cloud.sig=cloudSig(cloudPack(st)); lsSet('wh.students',students); cloudState.at=Date.now();
+      document.documentElement.classList.add('stu-mode');
+      loadStudent(st); applySkin(st.skin); studentHub(); toast(`欢迎你，${st.name}`);
+    }catch(e){ toast('登录失败：'+e.message); }
+    finally{ if(go.isConnected){ go.disabled=false; go.textContent='登录'; } }
+  };
+}
+function logoutStudent(){
+  const m=MODE(); if(!m) return;
+  const go=()=>{ ['libs','prog','log','pend','forgot','rpend','hist','af','aflog','lesson','reports','rounds'].forEach(k=>{ try{ localStorage.removeItem(`wh.${m.sid}.${k}`); }catch(e){} });
+    students=students.filter(x=>x.id!==m.sid); lsSet('wh.students',students); try{ localStorage.removeItem('wh.mode'); }catch(e){}
+    document.documentElement.classList.remove('stu-mode'); stu=null; loginPage(); toast('已退出登录'); };
+  if(stu && stu.cloud && stu.cloud.dirty) cloudPush(stu).then(go, go); else go();
+}
+function bootApp(){
+  const m=MODE();
+  if(m && m.role==='student'){
+    document.documentElement.classList.add('stu-mode');
+    const st=students.find(x=>x.id===m.sid);
+    if(st){ loadStudent(st); applySkin(st.skin); studentHub(); return; }
+    return loginPage();
+  }
+  studentsHome();
+}
+
 /* ---------- 课堂: 1-hour timer, lesson record, word sheets, 学情报告 ---------- */
 const LESSON_MS = 60*60*1000, WARN_MS = 5*60*1000;
 const pad2 = n => String(n).padStart(2,'0');
@@ -6831,6 +7406,7 @@ const hhmm = ts => { const d=new Date(ts); return `${pad2(d.getHours())}:${pad2(
 const ymd = ts => { const d=new Date(ts); return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; };
 function lessonSave(){ if(stu){ lsSet(`wh.${stu.id}.lesson`, lesson); lsSet(`wh.${stu.id}.reports`, reports); } }
 function lessonStart(lib){
+  if(isStuMode()) return;
   if(lesson && Date.now()-lesson.start >= LESSON_MS) endLesson(false);   // last hour is over → file its report first
   if(!lesson){
     lesson={start:Date.now(), libs:[], rev:{ok:[],ng:[]}, revAgain:[], learn:{words:[],ng:[]}, w5:false, w0:false};
@@ -6979,11 +7555,13 @@ function openReport(id, tab='report', fresh=false){
     ${fresh?`<div class="rp-celebrate">${STARS}</div>`:''}
     <div class="rp-tabs">${tabs.map(([k,t])=>`<button data-t="${k}" aria-pressed="${k===tab}">${t}</button>`).join('')}</div>
     <div id="rpBody">${tab==='report'?reportHTML(r):sheetHTML(r,tab)}</div>
+    ${tab==='report'?statusPanelHTML(r):''}
     <div class="rp-actions">${tab==='report'?'<button class="btn sm" id="rpEdit">修改评语</button>':''}<button class="btn primary" id="rpSave">保存为图片</button></div>`;
   if(fresh) FX.levelClear({big:true, voiceText:'Excellent! You did it'});
   document.getElementById('rpBack').onclick=()=>{ REP=null; home(); };
   app.querySelectorAll('.rp-tabs button').forEach(b=>b.onclick=()=>openReport(id,b.dataset.t));
   document.getElementById('rpSave').onclick=()=>saveImage(`${r.name}-${ymd(r.start)}-${tabs.find(t=>t[0]===tab)[1]}.png`);
+  if(tab==='report') bindStatusPanel(r, ()=>{ const y=window.scrollY; openReport(id,'report'); window.scrollTo(0,y); });
   const ed=document.getElementById('rpEdit');
   if(ed) ed.onclick=()=>{
     const p=document.getElementById('rpComment');
@@ -7015,7 +7593,7 @@ async function saveImage(name){
   toast('正在生成图片…');
   try{
     await loadH2C();
-    const canvas=await window.html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true});
+    const canvas=await window.html2canvas(el,{scale:2,backgroundColor:'#ffffff',useCORS:true,onclone:doc=>{ const c=doc.getElementById('capture'); if(c) fixColorsForCapture(c); }});
     const url=canvas.toDataURL('image/png');
     try{
       const blob=await (await fetch(url)).blob(), file=new File([blob],name,{type:'image/png'});
@@ -7140,6 +7718,7 @@ function studentStats(st){
 }
 const STU_COLORS=['--b5','--b1','--b4','--b2','--b3'];
 function studentsHome(){
+  if(isStuMode()) return bootApp();
   stu=null; cur=null; S=null; G=null; window.scrollTo(0,0); applySkin('candy'); tickLesson(); if(chipMenu){chipMenu.remove();chipMenu=null;}
   const cards=students.map((st,i)=>{
     const x=studentStats(st);
@@ -7160,8 +7739,10 @@ function studentsHome(){
       <div class="cat-pick">${CATALOG.map(id=>`<label class="chk"><input type="checkbox" name="newCat" value="${id}"> ${esc(catName(id))}</label>`).join('')}</div>
       <button class="btn primary" id="addStu">添加</button>
     </div>
-  </details>`;
+  </details>
+  <button class="btn login-entry" id="goLogin">家长 / 学生登录</button>`;
   FX.popIn(app.querySelectorAll('.stu'));
+  document.getElementById('goLogin').onclick=loginPage;
   app.querySelectorAll('.stu').forEach(b=>b.onclick=()=>{ loadStudent(students.find(x=>x.id===b.dataset.sid)); ensurePresets(stu); applySkin(stu.skin); tickLesson(); studentHub(); window.scrollTo(0,0); });
   document.getElementById('addStu').onclick=()=>{
     const name=document.getElementById('newName').value.trim();
@@ -7172,7 +7753,7 @@ function studentsHome(){
   };
 }
 
-studentsHome();
+bootApp();
 prepUI();
 </script>
 
