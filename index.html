@@ -724,6 +724,30 @@ button.afd:active{background:rgba(123,92,240,.10)}
 .login-box input{font:inherit;font-size:16px;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:#fff;color:var(--ink)}
 pre.cred{white-space:pre-wrap;font:inherit;font-size:14px;line-height:1.7;margin:0;padding:12px;border-radius:12px;background:var(--surface-2);color:var(--ink);-webkit-user-select:text;user-select:text}
 .stu-mode #goLearn,.stu-mode #del,.stu-mode #goReports,.stu-mode #nextRound,.stu-mode #roundPick,.stu-mode .tonly,.stu-mode #fbEdit,.stu-mode #again,.stu-mode #goNew{display:none!important}
+/* 抗遗忘: plan as numbers, history table */
+.afp-num{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.afn{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;border-radius:12px;background:var(--surface-2);font:inherit}
+.afn .d{font-size:11.5px;color:var(--muted);font-weight:700}
+.afn .n{font-size:20px;font-weight:900;color:var(--ink);line-height:1.15}
+.afn .u{font-size:10.5px;color:var(--muted)}
+.afn.today{background:#EDE7FF;box-shadow:inset 0 0 0 2px #7B5CF0}
+.afn.zero .n{color:var(--muted);font-weight:700}
+.afn:active{transform:translateY(1px)}
+.hist{display:flex;flex-direction:column;gap:8px}
+.hist-t{display:flex;flex-direction:column}
+.hist-h,.hist-row{display:grid;grid-template-columns:1.5fr 1.1fr 1fr .9fr;align-items:center;text-align:center;gap:4px}
+.hist-h{font-size:13px;font-weight:800;color:var(--ink);padding:6px 0 10px;border-bottom:1.5px solid var(--line)}
+.hist-row{font:inherit;font-size:14.5px;color:#55606E;padding:12px 0;border-bottom:1px solid var(--line);background:none;width:100%}
+.hist-row .hd{display:flex;justify-content:center;color:#2FA37C}
+.hist-row .hd svg{width:24px;height:24px}
+.hist-row.nodet{color:#8A93A0}
+.hist-row.more{display:none}
+button.hist-row:active{background:var(--surface-2)}
+.go-card.af.done{background:linear-gradient(160deg,#5FD5C3,#1DB3A1)}
+.go-card.af.big{flex-direction:column!important;align-items:center!important;justify-content:center;text-align:center;gap:4px}
+.af-fb{white-space:pre-wrap}
+.ok-list summary{cursor:pointer}
+.ok-list .forgot-list{margin-top:8px}
 /* the word currently being read */
 .reading{outline:3px solid var(--accent);outline-offset:2px;border-radius:16px}
 [data-skin="teal"] .reading{outline-color:#FF8A1F}
@@ -6697,29 +6721,73 @@ function week7HTML(){
 function afPlanAll(){
   const cnt=Array(7).fill(0); libs.forEach(l=>afForecast(l,7).forEach((n,i)=>cnt[i]+=n));
   if(!cnt.some(n=>n)) return '<div class="af-plan"><div class="afp-h"><b>抗遗忘复习计划</b></div><p class="afp-note">第一轮学完新单词后，这里会显示未来 7 天每天要复习多少个。</p></div>';
-  const max=Math.max(...cnt), WK='日一二三四五六', t=today();
-  const lab=i=> i===0?'今天':(i===1?'明天':'周'+WK[new Date((t+i-(settings.offset||0))*864e5).getUTCDay()]);
+  const WK='日一二三四五六', t=today();
+  const lab=i=> i===0?'今天':(i===1?'明天':'周'+WK[new Date((t+i)*864e5).getUTCDay()]);
   return `<div class="af-plan"><div class="afp-h"><b>抗遗忘复习计划</b><span>未来 7 天共 ${cnt.reduce((a,b)=>a+b,0)} 词次</span></div>
-    <div class="afp">${cnt.map((n,i)=>`<button class="afd${i===0?' today':''}" data-day="${i}" data-lab="${lab(i)}" aria-label="${lab(i)} ${n} 个单词，点开查看"><span class="n num">${n}</span><div class="bt"><i style="height:${max?Math.max(n?8:0,n/max*100):0}%"></i></div><span class="d">${lab(i)}</span></button>`).join('')}</div>
-    <p class="afp-note">点方块可以看到当天要复习的单词。按 21 天记忆曲线预计（每个新词共推送 10 次），假设每天都完成复习；不含之后新学的单词。</p></div>`;
+    <div class="afp-num">${cnt.map((n,i)=>`<button class="afn${i===0?' today':''}${n?'':' zero'}" data-day="${i}" data-lab="${lab(i)}" aria-label="${lab(i)} ${n} 个单词，点开查看"><span class="d">${lab(i)}</span><span class="n num">${n}</span><span class="u">词</span></button>`).join('')}</div>
+    <p class="afp-note">点某一天可以看到当天要复习的单词。按 21 天记忆曲线预计（每个新词共推送 10 次），假设每天都完成复习；不含之后新学的单词。</p></div>`;
+}
+/* one record per day: every submission of the day is merged into it */
+const AFREC = () => stu.afrec || (stu.afrec=[]);
+const afToday = () => AFREC().find(r=>r.day===today());
+const dayYMD = d => new Date(d*864e5).toISOString().slice(0,10);
+const pct1 = (ok,n) => n ? (Math.round(ok/n*1000)/10).toFixed(1)+'%' : '—';
+const recNums = r => { const n=r.items.length, ng=r.items.filter(x=>x.r==='ng').length; return {n, ng, ok:n-ng}; };
+function afFeedback(r){
+  const {n, ng}=recNums(r), name=stu.name, fr=n?ng/n*100:0;
+  const pools = fr===0 ? [
+      `${name}同学今天的复习表现真的很棒☀☀，整体的单词反应速度和记忆准确度都是超赞的，坚持下去，一定会学有所成🎉🎉`,
+      `${name}同学今天一个单词都没有忘记，记忆非常扎实👍👍，这份认真值得表扬，继续保持这个节奏，一定会学有所成🎉🎉`,
+      `${name}同学今天的复习满分完成☀☀，反应又快又准，说明之前学得很扎实，坚持下去，词汇量会越来越大💪`,
+      `${name}同学今天的复习完成得非常漂亮✨✨，每个单词都记得清清楚楚，这就是坚持复习的力量，继续加油🎉🎉`]
+    : fr<10 ? [
+      `${name}同学今天的复习完成得很出色☀，绝大部分单词都记得很牢，个别遗忘的单词课下再多读几遍就能拿下，期待你下次精彩的表现🎉🎉`,
+      `${name}同学今天的记忆准确度很高👍，只有少数几个单词需要再巩固，坚持下去，一定会学有所成🎉🎉`,
+      `${name}同学今天复习状态很好☀☀，反应速度和准确度都不错，遗忘的那几个单词明天还会再出现，再见一次就记住啦💪`]
+    : fr<=25 ? [
+      `${name}今日复习态度很端正，依旧可以紧跟老师的速度和节奏。重复是打败遗忘的关键，课下可以跟着机器的发音多读几遍哦，期待你下次精彩的表现🎉🎉`,
+      `${name}同学今天认真完成了复习👍，有一部分单词还需要再巩固，重复是打败遗忘的关键，课下多听多读几遍，坚持下去，一定会学有所成💪`,
+      `${name}同学对新鲜事物有强烈的探索欲望，如果能够跟进老师的节奏专注课堂内容会更好哦，坚持下去，一定会学有所成，希望每一次都能超越昨天的自己💪`]
+    : [
+      `${name}同学今天坚持完成了复习，这本身就很棒💪。遗忘的单词不用着急，明天它们还会再出现，课下跟着发音多读几遍，希望每一次都能超越昨天的自己💪`,
+      `${name}同学今天的复习有一些单词忘记了，没关系，遗忘是记忆的一部分☀。重复是打败遗忘的关键，课下可以跟着机器的发音多读几遍哦，期待你下次精彩的表现🎉🎉`];
+  return `姓名：${name}\n日期：${dayYMD(r.day)} ${hhmm(r.t)}\n今日21天抗遗忘复习${n}个单词，遗忘了${ng}个，遗忘率${n?(Math.round(fr*10)/10).toFixed(1):'0.0'}％\n${pickOne(pools)}`;
 }
 function reviewHome(){
   if(!stu) return studentsHome();
   cur=null; S=null; G=null; AFS=null; window.scrollTo(0,0);
-  const items=afDueAll(), nLib=new Set(items.map(x=>x.lib.id)).size;
+  const items=afDueAll(), nLib=new Set(items.map(x=>x.lib.id)).size, tr=afToday(), tn=tr?recNums(tr):null;
+  const main = items.length
+    ? `<button class="go-card af big" id="goAF"><b>抗遗忘复习</b><span>${tr?`今日还剩 ${items.length} 词 · 已复习 ${tn.n} 词`:`今日 ${items.length} 词${nLib>1?` · 来自 ${nLib} 个词库`:''}`}</span></button>`
+    : tr ? `<button class="go-card af big done" id="goToday"><b>今日复习已完成</b><span>复习 ${tn.n} 词 · 正确率 ${pct1(tn.ok,tn.n)} · 点开查看</span></button>`
+         : `<button class="go-card af big" disabled><b>抗遗忘复习</b><span>今天没有需要抗遗忘的单词</span></button>`;
   app.innerHTML=`<header class="top"><button class="back" id="toHub">‹ ${esc(stu.name)}</button><h2>进入复习</h2><span style="width:48px"></span></header>
   ${simNote()}
-  <button class="go-card af big" id="goAF" ${items.length?'':'disabled'}><b>抗遗忘复习</b><span>${items.length?`今日 ${items.length} 词${nLib>1?` · 来自 ${nLib} 个词库`:''}`:'今天没有需要抗遗忘的单词'}</span></button>
+  ${main}
+  ${items.length&&tr?`<button class="btn sm" id="goToday" style="align-self:center">查看今日已复习的 ${tn.n} 词</button>`:''}
   ${afPlanAll()}
-  <div class="task"><div class="label">过去 7 天正确率</div><div class="week7">${week7HTML()}</div></div>
-  <p class="go-hint">每个词库第一轮学完的新单词，当天就进入 21 天抗遗忘复习，共推送 10 次；第二、三轮的单词不再推送。所有词库的单词都汇总在这里一起复习。</p>`;
+  ${afHistoryHTML()}
+  <p class="go-hint">每个词库第一轮学完的新单词，当天就进入 21 天抗遗忘复习，共推送 10 次；第二、三轮的单词不再推送。所有词库的单词都汇总在这里一起复习，可以分几次完成。</p>`;
   FX.popIn(app.querySelectorAll('.go-card,.af-plan,.task'));
   document.getElementById('toHub').onclick=studentHub;
-  document.getElementById('goAF').onclick=startAF;
-  app.querySelectorAll('.afp .afd[data-day]').forEach(b=>b.onclick=()=>showDayWords(+b.dataset.day, b.dataset.lab));
+  const ga=document.getElementById('goAF'); if(ga) ga.onclick=startAF;
+  const gt=document.getElementById('goToday'); if(gt) gt.onclick=()=>afDayView(today());
+  app.querySelectorAll('.afp-num .afn[data-day]').forEach(b=>b.onclick=()=>showDayWords(+b.dataset.day, b.dataset.lab));
+  app.querySelectorAll('.hist-row[data-day]').forEach(b=>b.onclick=()=>afDayView(+b.dataset.day));
+  const more=document.getElementById('histMore'); if(more) more.onclick=()=>{ app.querySelectorAll('.hist-row.more').forEach(x=>x.classList.remove('more')); more.remove(); };
+}
+function afHistoryHTML(){
+  const byDay={}; AFREC().forEach(r=>{ const x=recNums(r); byDay[r.day]={day:r.day, n:x.n, ok:x.ok, rec:true}; });
+  Object.entries(afLogAll()).forEach(([d,v])=>{ if(!byDay[d] && v.n) byDay[d]={day:+d, n:v.n, ok:v.ok, rec:false}; });   // older days without details
+  const rows=Object.values(byDay).filter(x=>x.day<=today()).sort((a,b)=>b.day-a.day);
+  if(!rows.length) return '';
+  return `<div class="task hist"><div class="label">往期复习</div>
+    <div class="hist-t"><div class="hist-h"><span>日期</span><span>复习单词数</span><span>正确率</span><span>查看详情</span></div>
+    ${rows.map((x,i)=>`<${x.rec?`button class="hist-row${i>=14?' more':''}" data-day="${x.day}"`:`div class="hist-row nodet${i>=14?' more':''}"`}><span class="num">${dayYMD(x.day)}</span><span class="num">${x.n}</span><span class="num">${pct1(x.ok,x.n)}</span><span class="hd">${x.rec?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v8l-6 6H6a1 1 0 01-1-1V4a1 1 0 011-1z"/><path d="M13 21v-5a1 1 0 011-1h5M8.5 9h7M8.5 12.5h5"/></svg>':'—'}</span></${x.rec?'button':'div'}>`).join('')}
+    </div>${rows.length>14?'<button class="btn sm" id="histMore" style="align-self:center">显示更早的记录</button>':''}</div>`;
 }
 
-let AFS=null;   // live session — never saved until it is finished
+let AFS=null;   // live session — only the words that were marked are saved
 function startAF(){
   const items=afDueAll(); if(!items.length) return;
   S=null; G=null; AFS={items, res:{}, show:new Set()};
@@ -6735,22 +6803,31 @@ function afTally(){
   const v=Object.values(AFS.res), ok=v.filter(x=>x==='ok').length;
   return `<b>${v.length}</b>/${AFS.items.length} · 对 ${ok} · 错 ${v.length-ok}`;
 }
+function afDoneLabel(k){ return k && k<AFS.items.length ? `提交 ${k} 个` : '完成'; }
 function renderAF(){
-  const n=Object.keys(AFS.res).length, all=n===AFS.items.length;
+  const n=Object.keys(AFS.res).length;
   app.innerHTML=`
   <div class="study-head af-head">
     <header class="top"><button class="back" id="afExit">‹ 退出</button><h2>抗遗忘复习</h2><span class="sub num" id="afCount" style="min-width:56px;text-align:right">${n}/${AFS.items.length}</span></header>
     <div class="prog"><i style="width:${n/AFS.items.length*100}%"></i></div>
   </div>
   <div class="aflist" id="aflist">${AFS.items.map(afRow).join('')}</div>
-  <div class="bottom"><span class="tally" id="afTally">${afTally()}</span><button class="btn primary" id="afDone" ${all?'':'disabled'}>完成</button></div>`;
+  <div class="bottom"><span class="tally" id="afTally">${afTally()}</span><button class="btn primary" id="afDone" ${n?'':'disabled'}>${afDoneLabel(n)}</button></div>`;
   document.getElementById('afExit').onclick=()=>{
-    const b=document.getElementById('afExit');
-    if(n===0 || b.classList.contains('arm')){ AFS=null; reviewHome(); return; }
-    b.classList.add('arm'); b.textContent='再点退出'; toast('退出后这次的进度不会保存');
+    const b=document.getElementById('afExit'), k=Object.keys(AFS.res).length;
+    if(k===0 || b.classList.contains('arm')){ AFS=null; reviewHome(); return; }
+    b.classList.add('arm'); b.textContent='再点退出'; toast('退出后这次标记的不会保存；想保留请点「提交」');
     setTimeout(()=>{ if(b.isConnected){ b.classList.remove('arm'); b.textContent='‹ 退出'; } },3000);
   };
-  document.getElementById('afDone').onclick=finishAF;
+  const done=document.getElementById('afDone');
+  done.onclick=()=>{
+    const k=Object.keys(AFS.res).length; if(!k) return;
+    if(k<AFS.items.length && !done.classList.contains('arm')){
+      done.classList.add('arm'); done.textContent='再点一次提交'; toast(`还有 ${AFS.items.length-k} 个没复习，提交后可以稍后接着复习`);
+      setTimeout(()=>{ if(done.isConnected){ done.classList.remove('arm'); done.textContent=afDoneLabel(Object.keys(AFS.res).length); } },3000); return;
+    }
+    finishAF();
+  };
   document.getElementById('aflist').onclick=e=>{
     const row=e.target.closest('.afr'); if(!row) return; const i=+row.dataset.i, it=AFS.items[i];
     const b=e.target.closest('.afb');
@@ -6765,33 +6842,56 @@ function renderAF(){
     document.getElementById('afCount').textContent=`${k}/${AFS.items.length}`;
     app.querySelector('.prog i').style.width=(k/AFS.items.length*100)+'%';
     document.getElementById('afTally').innerHTML=afTally();
-    document.getElementById('afDone').disabled = k<AFS.items.length;
+    done.disabled=!k; done.classList.remove('arm'); done.textContent=afDoneLabel(k);
     if(k===AFS.items.length && !was) toast('全部完成，点「完成」查看结果');
   };
 }
 function finishAF(){
-  const t=today(), items=AFS.items, ng=items.filter((_,i)=>AFS.res[i]==='ng'), ok=items.length-ng.length;
-  items.forEach(it=>{ const a=AF(it.lib), E=afDay(it.lib), p=a.plan[it.w]; if(!p) return; p.k++;
+  const t=today(), marked=AFS.items.map((it,i)=>({it, r:AFS.res[i]})).filter(x=>x.r);
+  if(!marked.length) return;
+  marked.forEach(({it})=>{ const a=AF(it.lib), E=afDay(it.lib), p=a.plan[it.w]; if(!p) return; p.k++;
     if(p.k>=AF_OFF.length) delete a.plan[it.w]; else p.next=Math.max(p.base+AF_OFF[p.k], E+1); });
   libs.forEach(l=>{ const a=af[l.id]; if(a && Object.keys(a.plan).length) a.lastDone=t; });
-  const lg=AFLOG({id:'_all'}), d=lg[t]||(lg[t]={n:0,ok:0}); d.n+=items.length; d.ok+=ok;
+  const ok=marked.filter(x=>x.r==='ok').length;
+  const lg=AFLOG({id:'_all'}), d=lg[t]||(lg[t]={n:0,ok:0}); d.n+=marked.length; d.ok+=ok;
+  let rec=afToday(); if(!rec){ rec={day:t, t:Date.now(), items:[], fb:'', fbEdited:false}; AFREC().push(rec); }
+  marked.forEach(({it,r})=>{ rec.items=rec.items.filter(x=>!(x.w===it.w && x.lib===it.lib.name)); rec.items.push({w:it.w, lib:it.lib.name, d:(it.lib.defs||{})[it.w]||'', r}); });
+  rec.t=Date.now();
+  if(!rec.fbEdited) rec.fb=afFeedback(rec);
+  else { const fresh=afFeedback(rec).split('\n');                   // keep the teacher's words, refresh the date and counts lines
+    rec.fb=rec.fb.replace(/^日期：.*$/m, fresh[1]).replace(/^今日21天抗遗忘复习.*$/m, fresh[2]); }
+  if(AFREC().length>200) stu.afrec=AFREC().slice(-200);
   save(); AFS=null;
-  const rate=Math.round(ok/items.length*100);
-  app.innerHTML=`<header class="top"><button class="back" id="afBack">‹ 复习</button><h2>抗遗忘复习完成</h2><span style="width:40px"></span></header>
+  afDayView(t, true);
+}
+function afDayView(day, fresh){
+  const rec=AFREC().find(r=>r.day===day); if(!rec) return reviewHome();
+  window.scrollTo(0,0);
+  const {n, ng, ok}=recNums(rec), left=day===today()?afDueAll().length:0, ngs=rec.items.filter(x=>x.r==='ng'), oks=rec.items.filter(x=>x.r==='ok');
+  const wl=a=>a.map(x=>`<button class="fg" data-w="${esc(x.w)}"><b>${esc(x.w)}</b><span>${esc(x.d||'暂无释义')}</span></button>`).join('');
+  app.innerHTML=`<header class="top"><button class="back" id="afBack">‹ 复习</button><h2>${day===today()?'今日复习结果':dayYMD(day)}</h2><span style="width:40px"></span></header>
   <div class="af-sum">
-    <div><span class="v num">${items.length}</span><span class="k">复习单词</span></div>
-    <div><span class="v num">${rate}%</span><span class="k">正确率</span></div>
-    <div><span class="v num">${ng.length}</span><span class="k">遗忘</span></div>
+    <div><span class="v num">${n}</span><span class="k">复习单词</span></div>
+    <div><span class="v num">${pct1(ok,n)}</span><span class="k">正确率</span></div>
+    <div><span class="v num">${ng}</span><span class="k">遗忘</span></div>
   </div>
-  <div class="task"><div class="label">过去 7 天正确率</div><div class="week7">${week7HTML()}</div></div>
-  ${ng.length?`<div class="task"><div class="label">遗忘的单词（点一下听发音）</div><div class="forgot-list">${ng.map(it=>`<button class="fg" data-w="${esc(it.w)}"><b>${esc(it.w)}</b><span>${esc((it.lib.defs||{})[it.w]||'暂无释义')}</span></button>`).join('')}</div></div>`:'<div class="task"><p>这次没有遗忘的单词，全部记得！</p></div>'}
-  ${feedbackHTML()}
-  <button class="btn primary" id="afLib" style="align-self:center">返回复习</button>`;
-  FX.popIn(app.querySelectorAll('.af-sum>div,.task'));
+  ${left?`<button class="btn primary" id="afMore" style="align-self:center">接着复习剩下的 ${left} 个</button>`:''}
+  <div class="fb-card"><div class="fb-h"><b>助教寄语</b><span><button class="btn sm" id="fbCopy">复制</button><button class="btn sm" id="fbEdit">修改</button></span></div><p class="fb-text af-fb" id="fbText"></p></div>
+  ${ng?`<div class="task"><div class="label">遗忘的单词（${ng}，点一下听发音）</div><div class="forgot-list">${wl(ngs)}</div></div>`:'<div class="task"><p style="margin:0">这次没有遗忘的单词，全部记得！</p></div>'}
+  ${oks.length?`<details class="task ok-list"><summary class="label">记得的单词（${oks.length}）</summary><div class="forgot-list">${wl(oks)}</div></details>`:''}
+  <button class="btn" id="afLib" style="align-self:center">返回复习</button>`;
+  FX.popIn(app.querySelectorAll('.af-sum>div,.task,.fb-card'));
+  const p=document.getElementById('fbText'); p.textContent=rec.fb||afFeedback(rec);
   document.getElementById('afBack').onclick=document.getElementById('afLib').onclick=reviewHome;
-  bindFeedback('af', {n:items.length, ok, ng:ng.length});
+  const mo=document.getElementById('afMore'); if(mo) mo.onclick=startAF;
+  document.getElementById('fbCopy').onclick=async()=>{ try{ await navigator.clipboard.writeText(p.innerText.trim()); toast('已复制，可以直接发给家长'); }catch(e){ toast('请长按文字手动复制'); } };
+  const ed=document.getElementById('fbEdit');
+  ed.onclick=()=>{
+    if(ed.dataset.on){ rec.fb=p.innerText.trim()||rec.fb; rec.fbEdited=true; p.textContent=rec.fb; p.contentEditable='false'; p.classList.remove('editing'); ed.textContent='修改'; delete ed.dataset.on; save(); toast('寄语已保存'); }
+    else { p.contentEditable='true'; p.classList.add('editing'); p.focus(); ed.textContent='保存'; ed.dataset.on='1'; }
+  };
   app.querySelectorAll('.fg').forEach(b=>b.onclick=()=>speak(b.dataset.w,b));
-  if(rate>=80) FX.levelClear({voiceText: rate===100?'Perfect':'Great job'});
+  if(fresh && !left){ const r=n?ok/n:0; if(r>=0.8) FX.levelClear({voiceText: r===1?'Perfect':'Great job'}); }
 }
 
 /* ---------- 词汇量测试: 4-choice test sampled from every textbook level ---------- */
@@ -7202,7 +7302,7 @@ function distPage(back){
 /* ---------- 云端账号 (Supabase): teacher device ↔ parent / student phone ---------- */
 const CLOUD = Object.assign({url:'https://axwjvojlgysbtselkguv.supabase.co', key:'sb_publishable_uHHQsMWwGyxTqHgUbO2hNQ_4KbX74Rk'}, lsGet('wh.cloudcfg',{}));
 const CLOUD_KEYS = ['libs','prog','log','pend','forgot','rpend','hist','af','aflog','rounds'];
-const CLOUD_META = ['name','note','skin','vtest','dist','fbs'];
+const CLOUD_META = ['name','note','skin','vtest','dist','fbs','afrec'];
 async function rpc(fn, args){
   const res = await fetch(`${CLOUD.url}/rest/v1/rpc/${fn}`, {method:'POST', headers:{'apikey':CLOUD.key, 'Content-Type':'application/json'}, body:JSON.stringify(args)});
   const txt = await res.text(); let j=null; try{ j=txt?JSON.parse(txt):null; }catch(e){}
