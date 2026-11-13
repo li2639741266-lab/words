@@ -5,19 +5,14 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>五盒背词</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="五盒背词">
+<meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#5EC2FF">
 <link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
-<style>
-:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-body{margin:0}
-img{max-width:100%}
-[hidden]{display:none!important}
-</style>
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap">
@@ -748,6 +743,18 @@ button.hist-row:active{background:var(--surface-2)}
 .af-fb{white-space:pre-wrap}
 .ok-list summary{cursor:pointer}
 .ok-list .forgot-list{margin-top:8px}
+/* 记忆卡片 */
+.mem-ta{font:inherit;font-size:15px;min-height:110px;resize:vertical;padding:10px 12px;border-radius:12px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);font-family:var(--f-word)}
+.mem-ai{gap:10px}
+.mem-ai summary{cursor:pointer;list-style:none}
+.mem-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;background:rgba(255,255,255,.85);border-radius:16px;padding:8px 8px 8px 14px;font-weight:700}
+.mem-list{display:flex;flex-direction:column;gap:14px}
+.mem-item{gap:10px}
+.mem-img{width:100%;aspect-ratio:4/5;border-radius:12px;background:#fff;box-shadow:inset 0 0 0 1.5px var(--line);object-fit:contain}
+.mem-f{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mem-item label{display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:700;color:var(--muted);min-width:0}
+.mem-item input,.mem-item textarea{font:inherit;font-size:15px;font-weight:500;color:var(--ink);padding:8px 10px;border-radius:10px;border:2px solid var(--line);background:var(--surface-2);min-width:0;width:100%;box-sizing:border-box}
+.stu-mode #goMem,.stu-mode #rpMem{display:none!important}
 /* the word currently being read */
 .reading{outline:3px solid var(--accent);outline-offset:2px;border-radius:16px}
 [data-skin="teal"] .reading{outline-color:#FF8A1F}
@@ -6295,6 +6302,7 @@ function startLearning(kind){
   kind = kind==='rev' ? 'rev' : 'learn';
   const words=[...(kind==='rev'?RPD(cur):PD(cur))]; if(!words.length) return;
   S=null; G={kind, words, page:0, pages:Math.ceil(words.length/PER), clicks:{}, view:'list', cut:new Set(), show:new Set()};
+  if(kind==='learn') lessonNoteLearn(words, []);     // every word that entered learning goes on the lesson word sheet
   renderLearning();
 }
 const ICON_CUT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12"/></svg>';
@@ -6611,12 +6619,13 @@ function home(){
   ${simNote()}
   ${libs.length?'':'<div class="empty-libs">还没有开通词库。<button class="btn sm primary" id="goInfo">去学员信息开通词库</button></div>'}
   <div class="libs">${cards}</div>
-  <div class="learn-links"><button class="btn" id="goReports">课堂报告${reports.length?`（${reports.length}）`:''}${lesson?' · 正在上课':''}</button><button class="btn" id="goDist">区分本${(stu.dist||[]).length?`（${stu.dist.length}）`:''}</button></div>`;
+  <div class="learn-links"><button class="btn" id="goReports">课堂报告${reports.length?`（${reports.length}）`:''}${lesson?' · 正在上课':''}</button><button class="btn" id="goDist">区分本${(stu.dist||[]).length?`（${stu.dist.length}）`:''}</button><button class="btn" id="goMem">记忆卡片</button></div>`;
   FX.popIn(app.querySelectorAll('.lib'));
   app.querySelectorAll('.lib').forEach(b=>b.onclick=()=>openLib(libs.find(l=>l.id===b.dataset.lib)));
   document.getElementById('toHub').onclick=studentHub;
   document.getElementById('goReports').onclick=()=>openReports(null);
   document.getElementById('goDist').onclick=()=>distPage(home);
+  document.getElementById('goMem').onclick=()=>memPage([], home);
   const gi=document.getElementById('goInfo'); if(gi) gi.onclick=infoPage;
 }
 
@@ -7499,6 +7508,181 @@ function bootApp(){
   studentsHome();
 }
 
+/* ---------- 记忆卡片: one picture per word with a memory hook (teacher tool) ---------- */
+const EMO=[['麻烦','😫💥'],['烦恼','😫'],['担心','😟'],['害怕','😱'],['恐惧','😱'],['惊讶','😲'],['吃惊','😲'],['生气','😠'],['愤怒','😡'],['高兴','😄'],['快乐','😄'],['开心','😄'],['幸福','🥰'],['悲伤','😢'],['难过','😢'],['伤心','😭'],['哭','😭'],['笑','😂'],['累','😩'],['疲倦','😩'],['无聊','🥱'],['兴奋','🤩'],['骄傲','😎'],['自豪','😎'],['紧张','😬'],['尴尬','😅'],['孤独','🥺'],['友好','🤗'],['礼貌','🙇'],['尊重','🙇'],['感谢','🙏'],['道歉','🙏'],['原谅','🤝'],
+['朋友','🤝'],['帮助','🤝'],['合作','🤝'],['家庭','👨‍👩‍👧'],['父亲','👨'],['爸爸','👨'],['母亲','👩'],['妈妈','👩'],['婴儿','👶'],['孩子','🧒'],['男孩','👦'],['女孩','👧'],['老人','👴'],['医生','👨‍⚕️'],['护士','👩‍⚕️'],['老师','👩‍🏫'],['学生','🧑‍🎓'],['警察','👮'],['厨师','👨‍🍳'],['农民','👨‍🌾'],['科学家','🧑‍🔬'],['作家','✍️'],['画家','🎨'],['歌手','🎤'],['司机','🚗'],['士兵','💂'],['国王','🤴'],['王后','👸'],
+['眼睛','👀'],['看','👀'],['耳朵','👂'],['听','👂'],['鼻子','👃'],['嘴','👄'],['牙','🦷'],['手','✋'],['脚','🦶'],['腿','🦵'],['踢','🦵'],['头','🧠'],['大脑','🧠'],['记住','🧠'],['记得','🧠'],['记忆','🧠'],['忘记','🤯'],['心','❤️'],['爱','❤️'],['喜欢','❤️'],['讨厌','🙅'],['拒绝','🙅'],['同意','👌'],['想','🤔'],['思考','🤔'],['决定','🤔'],['怀疑','🤨'],['想法','💡'],['主意','💡'],['发明','💡'],['知道','💡'],['理解','💡'],
+['说','💬'],['讲','💬'],['回答','💬'],['问题','❓'],['问','❓'],['读','📖'],['书','📖'],['写','✍️'],['作业','📚'],['考试','📝'],['笔记','📝'],['学习','📚'],['学校','🏫'],['教室','🏫'],['图书馆','📚'],['科学','🔬'],['实验','🧪'],['数学','➗'],['历史','📜'],['语言','🗣️'],['单词','🔤'],['字母','🔤'],['信','✉️'],['邮件','📧'],['电话','📱'],['手机','📱'],['电脑','💻'],['网络','🌐'],['照片','📷'],['相机','📷'],['电影','🎬'],['音乐','🎵'],['歌','🎵'],['唱','🎤'],['跳舞','💃'],['画','🎨'],['颜色','🎨'],['游戏','🎮'],['玩','🎮'],
+['运动','⚽'],['足球','⚽'],['篮球','🏀'],['排球','🏐'],['网球','🎾'],['游泳','🏊'],['跑','🏃'],['走','🚶'],['跳','🤸'],['爬','🧗'],['骑','🚴'],['比赛','🏆'],['赢','🏆'],['获胜','🏆'],['成功','🏆'],['冠军','🏆'],['奖','🏅'],['输','😞'],['失败','😞'],['努力','💪'],['强壮','💪'],['健康','💪'],['生病','🤒'],['病','🤒'],['发烧','🤒'],['疼','🤕'],['痛','🤕'],['受伤','🤕'],['药','💊'],['医院','🏥'],['死','💀'],['危险','⚠️'],['安全','🛡️'],['保护','🛡️'],['战争','⚔️'],['和平','🕊️'],
+['吃','🍽️'],['饭','🍚'],['米','🍚'],['面条','🍜'],['面包','🍞'],['蛋糕','🍰'],['糖','🍬'],['巧克力','🍫'],['苹果','🍎'],['香蕉','🍌'],['橙','🍊'],['西瓜','🍉'],['葡萄','🍇'],['草莓','🍓'],['水果','🍓'],['蔬菜','🥦'],['土豆','🥔'],['西红柿','🍅'],['胡萝卜','🥕'],['鸡蛋','🥚'],['肉','🍖'],['鱼','🐟'],['牛奶','🥛'],['茶','🍵'],['咖啡','☕'],['喝','🥤'],['饮料','🥤'],['水','💧'],['饿','😋'],['渴','🥤'],['做饭','🍳'],['厨房','🍳'],['餐馆','🍽️'],['饺子','🥟'],
+['狗','🐶'],['猫','🐱'],['鸟','🐦'],['鸡','🐔'],['鸭','🦆'],['马','🐴'],['牛','🐮'],['猪','🐷'],['羊','🐑'],['兔','🐰'],['熊','🐻'],['熊猫','🐼'],['老虎','🐯'],['狮子','🦁'],['大象','🐘'],['猴','🐵'],['蛇','🐍'],['老鼠','🐭'],['长颈鹿','🦒'],['海豚','🐬'],['鲸','🐳'],['昆虫','🐛'],['蜜蜂','🐝'],['动物','🐾'],['植物','🪴'],['花','🌸'],['树','🌳'],['森林','🌲'],['草','🌿'],['叶','🍃'],['种子','🌱'],['生长','🌱'],['农场','🚜'],
+['太阳','☀️'],['阳光','☀️'],['月亮','🌙'],['夜','🌙'],['星','⭐'],['天空','🌤️'],['云','☁️'],['雨','🌧️'],['雪','❄️'],['冷','🥶'],['热','🥵'],['温暖','☀️'],['风','🌬️'],['天气','⛅'],['山','⛰️'],['河','🏞️'],['湖','🏞️'],['海','🌊'],['岛','🏝️'],['沙漠','🏜️'],['地球','🌍'],['世界','🌍'],['国家','🗺️'],['地图','🗺️'],['城市','🏙️'],['村','🏡'],['环境','🌏'],['污染','🏭'],['垃圾','🗑️'],['火','🔥'],['电','⚡'],['能量','⚡'],['光','💡'],['声音','🔊'],['噪音','📢'],['安静','🤫'],['秘密','🤫'],
+['家','🏠'],['房子','🏠'],['房间','🛋️'],['门','🚪'],['床','🛏️'],['睡','😴'],['梦','💭'],['醒','⏰'],['时间','⏰'],['钟','⏰'],['早','🌅'],['晚','🌃'],['日历','📅'],['周末','📅'],['生日','🎂'],['节日','🎉'],['聚会','🎉'],['庆祝','🎉'],['礼物','🎁'],['惊喜','🎁'],['钱','💰'],['买','🛒'],['商店','🏪'],['卖','🏷️'],['价格','🏷️'],['便宜','🏷️'],['贵','💎'],['衣服','👕'],['裙','👗'],['鞋','👟'],['帽','🧢'],['包','🎒'],['钥匙','🔑'],['打开','🔓'],['关','🔒'],
+['车','🚗'],['公共汽车','🚌'],['火车','🚆'],['地铁','🚇'],['飞机','✈️'],['船','🚢'],['自行车','🚲'],['路','🛣️'],['街','🛣️'],['桥','🌉'],['旅行','🧳'],['旅游','🧳'],['机场','✈️'],['到达','📍'],['离开','👋'],['再见','👋'],['欢迎','👋'],['开始','🏁'],['结束','🏁'],['完成','✅'],['正确','✅'],['错误','❌'],['改变','🔄'],['等','⏳'],['快','⚡'],['慢','🐢'],['大','🐘'],['小','🐭'],['高','🦒'],['长','📏'],['重','🏋️'],['轻','🪶'],['新','🆕'],['好','👍'],['坏','👎'],['美','🌹'],['漂亮','🌹'],
+['梦想','🌈'],['希望','🌈'],['机会','🍀'],['幸运','🍀'],['放弃','🏳️'],['决心','🔥'],['勇敢','🦸'],['英雄','🦸'],['魔法','🪄'],['故事','📖'],['新闻','📰'],['报纸','📰'],['广告','📢'],['工作','💼'],['公司','🏢'],['经理','💼'],['工厂','🏭'],['机器','⚙️'],['机器人','🤖'],['技术','⚙️'],['推','👐'],['扔','🤾'],['抓','🤲'],['打','🥊'],['敲','✊'],['跟随','👣'],['找','🔍'],['发现','🔍'],['检查','🔍'],['丢失','🔍']].sort((a,b)=>b[0].length-a[0].length);
+const MEMO=()=>lsGet('wh.hooks',{});                         // teacher's hooks, shared by all students on this device
+function memAuto(w,d){
+  const core=(d||'').replace(/^((?:[a-z]+\.\s*(?:&\s*)?)+)/i,''), hit=EMO.find(([k])=>core.includes(k));
+  return {emoji: hit?hit[1]:'📘', bubble:'', hook:'', syl:sylSplit(w)};
+}
+function sylSplit(w){
+  if(/\s/.test(w)) return w.split(/\s+/).join(' · ');
+  const lw=w.toLowerCase(); if(lw.length<=4) return w;
+  const le=lw.match(/[^aeiouy]le$/); if(le && lw.length>5) return [sylSplit(w.slice(0,-3)), w.slice(-3)].join(' · ');   // trou·ble, lit·tle
+  const V='aeiouy', parts=[]; let i=0, start=0;
+  const isV=k=>V.includes(lw[k]) && !(lw[k]==='y'&&k===0);
+  while(i<lw.length){
+    while(i<lw.length && !isV(i)) i++;                // consonants
+    while(i<lw.length && isV(i)) i++;                 // vowel group
+    let j=i; while(j<lw.length && !isV(j)) j++;       // next consonant run
+    if(j>=lw.length) break;                            // no more vowels → rest stays
+    if(lw.slice(i).match(/^(ble|ple|tle|dle|gle|kle|zle|cle|fle)$/)) break;
+    const run=j-i; let cut = run<=1 ? i : i+1;
+    if(run>=2 && /^(th|sh|ch|ph|wh|ck|ng|qu|tr|pr|br|cr|dr|gr|fr|bl|cl|fl|gl|pl|sl|st)/.test(lw.slice(i+run-2,i+run)) && run===2) cut = /^(ck|ng)/.test(lw.slice(i,i+2)) ? i+2 : i;
+    if(lw.slice(i,i+2)==='ck') cut=i+2;
+    if(cut>start && cut<lw.length){ parts.push(w.slice(start,cut)); start=cut; }
+    i=j;
+  }
+  parts.push(w.slice(start));
+  // silent final e joins the syllable before it
+  if(parts.length>1 && /^[^aeiouy]*e$/i.test(parts[parts.length-1]) && !/le$/i.test(parts[parts.length-1])){ const e=parts.pop(); parts[parts.length-1]+=e; }
+  return parts.filter(Boolean).join(' · ');
+}
+const EMOJI_FONT='"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif';
+const CN_FONT='"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",sans-serif';
+function graphemes(s){ try{ return [...new Intl.Segmenter('zh',{granularity:'grapheme'}).segment(s)].map(x=>x.segment).filter(x=>x.trim()); }catch(e){ return Array.from(s).filter(x=>x.trim()); } }
+function wrapCN(ctx, text, maxW){ const out=[]; let line=''; for(const ch of text){ if(ctx.measureText(line+ch).width>maxW && line){ out.push(line); line=ch; } else line+=ch; } if(line) out.push(line); return out; }
+function drawMemCard(it, owner){
+  const W=1080, H=1350, c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  x.fillStyle='#FFFFFF'; x.fillRect(0,0,W,H);
+  x.textAlign='center'; x.textBaseline='alphabetic';
+  // word
+  let fs=170; x.fillStyle='#111111';
+  do{ x.font=`900 ${fs}px "Helvetica Neue","Arial Rounded MT Bold",Arial,sans-serif`; fs-=6; } while(x.measureText(it.w).width>960 && fs>60);
+  x.fillText(it.w, W/2, 230);
+  // syllables in alternating colours
+  const sy=(it.syl||it.w).split(' · '); x.font=`700 50px "Helvetica Neue",Arial,sans-serif`;
+  const sep='  ·  ', widths=sy.map(p=>x.measureText(p).width), sw=x.measureText(sep).width, tot=widths.reduce((a,b)=>a+b,0)+sw*(sy.length-1);
+  let sx=W/2-tot/2; x.textAlign='left';
+  sy.forEach((p,i)=>{ x.fillStyle=i%2?'#17B3A1':'#FF7A1A'; x.fillText(p,sx,315); sx+=widths[i]; if(i<sy.length-1){ x.fillStyle='#B8B8B8'; x.fillText(sep,sx,315); sx+=sw; } });
+  // meaning
+  x.textAlign='center'; x.fillStyle='#222'; x.font=`600 58px ${CN_FONT}`;
+  const ml=wrapCN(x,(it.d||'').replace(/\s+/g,' '),900).slice(0,2); ml.forEach((l,i)=>x.fillText(l,W/2,410+i*70));
+  // illustration: soft disc + emoji
+  const cy=ml.length>1?820:790;
+  x.fillStyle='#FFF4E2'; x.beginPath(); x.arc(W/2,cy,290,0,Math.PI*2); x.fill();
+  const em=graphemes(it.emoji||'📘').slice(0,3);
+  x.textBaseline='middle';
+  if(em[0]){ x.font=`300px ${EMOJI_FONT}`; x.fillText(em[0], W/2-(em.length>1?70:0), cy+10); }
+  if(em[1]){ x.font=`170px ${EMOJI_FONT}`; x.fillText(em[1], W/2+200, cy+150); }
+  if(em[2]){ x.font=`130px ${EMOJI_FONT}`; x.fillText(em[2], W/2-260, cy+170); }
+  // speech bubble
+  if(it.bubble){
+    x.font=`900 68px ${CN_FONT}`; const tw=Math.min(520,x.measureText(it.bubble).width), bw=tw+120, bh=170, bx=W/2+150, by=cy-250;
+    x.fillStyle='#fff'; x.strokeStyle='#111'; x.lineWidth=7;
+    x.beginPath(); x.ellipse(bx,by,bw/2,bh/2,0,0,Math.PI*2); x.fill(); x.stroke();
+    x.beginPath(); x.moveTo(bx-bw*.28,by+bh*.32); x.lineTo(bx-bw*.48,by+bh*.95); x.lineTo(bx-bw*.08,by+bh*.44); x.closePath(); x.fill(); x.stroke();
+    x.fillStyle='#fff'; x.fillRect(bx-bw*.27,by+bh*.30,bw*.18,16);
+    x.fillStyle='#111'; x.fillText(it.bubble, bx, by+4, 520);
+  }
+  x.textBaseline='alphabetic';
+  // hook
+  if(it.hook){
+    x.font=`500 42px ${CN_FONT}`; const hl=wrapCN(x,it.hook,860).slice(0,3), boxH=60+hl.length*58, top=H-80-boxH;
+    x.fillStyle='#F2FBF9'; x.strokeStyle='#BDE9E1'; x.lineWidth=4; x.beginPath(); x.roundRect?x.roundRect(80,top,W-160,boxH,28):x.rect(80,top,W-160,boxH); x.fill(); x.stroke();
+    x.fillStyle='#0E8577'; x.font=`800 34px ${CN_FONT}`; x.textAlign='left'; x.fillText('记忆钩子',110,top+50);
+    x.fillStyle='#13403B'; x.font=`500 42px ${CN_FONT}`; x.textAlign='center'; hl.forEach((l,i)=>x.fillText(l,W/2,top+102+i*58));
+  }
+  x.textAlign='right'; x.fillStyle='#B5B5B5'; x.font=`500 26px ${CN_FONT}`; x.fillText(`五盒背词 · 记忆卡片${owner?' · '+owner:''}`, W-40, H-30);
+  return c;
+}
+let MEM=null;
+function memPage(words, back){
+  if(!stu) return studentsHome();
+  window.scrollTo(0,0);
+  MEM={items:null, back:back||home};
+  app.innerHTML=`<header class="top"><button class="back" id="mBack">‹ 返回</button><h2>记忆卡片</h2><span style="width:48px"></span></header>
+  <p class="intro">每个单词生成一张带记忆钩子的图片卡，适合基础薄弱、第二天容易忘的同学课后看。一行一个单词，词库里有的单词会自动带上中文。</p>
+  <div class="task"><div class="label">本次单词（${words.length?`已放入本节课的 ${words.length} 个`:'可粘贴或手动输入'}）</div>
+    <textarea id="mWords" class="mem-ta" placeholder="trouble&#10;forget&#10;bridge 桥">${esc(words.join('\n'))}</textarea>
+    <button class="btn primary" id="mGo">提交，生成卡片</button></div>
+  <div id="mOut"></div>`;
+  document.getElementById('mBack').onclick=()=>{ MEM=null; (back||home)(); };
+  document.getElementById('mGo').onclick=()=>{
+    const lines=document.getElementById('mWords').value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if(!lines.length){ toast('请先填入单词'); return; }
+    const memo=MEMO(), seen=new Set();
+    MEM.items=lines.map(l=>{ const m=l.match(/^([A-Za-z][A-Za-z' .\-]*?)(?:\s+([^A-Za-z].*))?$/); if(!m) return null;
+      const w=m[1].trim(); if(seen.has(w.toLowerCase())) return null; seen.add(w.toLowerCase());
+      const d=(m[2]||'').trim() || defOf(w) || ((findDef(w)||{}).d) || '';
+      return Object.assign({w, d}, memAuto(w,d), memo[w.toLowerCase()]||{}); }).filter(Boolean);
+    renderMem();
+  };
+  if(words.length) document.getElementById('mGo').click();
+}
+function memPrompt(){
+  return `请为下面的英语单词各设计一个适合初中生的记忆钩子（谐音、拆分、联想都可以，要好笑好记、积极健康）。
+每个单词输出一行，格式严格为：
+单词 | 气泡里的一句短话（不超过6个字） | 记忆钩子（一句话，不超过30个字） | 1到2个emoji
+示例：
+trouble | 踹爆！ | trou-ble 读起来像"踹爆"，把麻烦一脚踹爆！ | 🦵💥
+单词：
+${MEM.items.map(it=>`${it.w} ${it.d}`).join('\n')}`;
+}
+function drawPrompt(it){
+  return `一张竖版的儿童英语单词卡插画，白色背景。顶部是大号黑色粗体英文单词"${it.w}"，下面是中文"${(it.d||'').replace(/^((?:[a-z]+\.\s*(?:&\s*)?)+)/i,'')}"。中间画一个可爱的Q版卡通人物${it.hook?`，画面表现：${it.hook}`:''}${it.bubble?`，旁边有对话气泡写着"${it.bubble}"`:''}。线条干净，色彩明亮，适合初中生。`;
+}
+async function copyText(t, ok){ try{ await navigator.clipboard.writeText(t); toast(ok||'已复制'); }catch(e){
+  const o=document.createElement('div'); o.className='day-sheet';
+  o.innerHTML=`<div class="ds-in"><div class="ds-h"><b>长按下面的文字全选复制</b><button class="btn sm" id="cpX">关闭</button></div><pre class="cred">${esc(t)}</pre></div>`;
+  document.body.appendChild(o); o.querySelector('#cpX').onclick=()=>o.remove(); } }
+function renderMem(){
+  const out=document.getElementById('mOut'); if(!out) return;
+  out.innerHTML=`
+  <details class="task mem-ai"><summary class="label">用 AI 帮忙想记忆钩子（可选）</summary>
+    <p class="hint">1. 点「复制给 AI 的话」，粘贴到豆包、DeepSeek 或 Claude；2. 把 AI 回复的结果整段复制回来，粘贴到下面，点「填入卡片」。</p>
+    <button class="btn sm" id="mPrompt">复制给 AI 的话</button>
+    <textarea id="mAI" class="mem-ta" placeholder="trouble | 踹爆！ | trou-ble 读起来像&quot;踹爆&quot;，把麻烦一脚踹爆！ | 🦵💥"></textarea>
+    <button class="btn" id="mApply">填入卡片</button></details>
+  <div class="mem-bar"><span>${MEM.items.length} 张卡片</span><button class="btn primary" id="mAll">保存全部图片</button></div>
+  <div class="mem-list">${MEM.items.map((it,i)=>`<div class="task mem-item" data-i="${i}">
+    <img class="mem-img" alt="${esc(it.w)} 的记忆卡片">
+    <div class="mem-f"><label>气泡<input data-k="bubble" value="${esc(it.bubble)}" placeholder="如：踹爆！"></label>
+      <label>emoji<input data-k="emoji" value="${esc(it.emoji)}" placeholder="🦵💥"></label></div>
+    <label class="mem-l">记忆钩子<textarea data-k="hook" rows="2" placeholder="如：trou-ble 读起来像&quot;踹爆&quot;，把麻烦一脚踹爆！">${esc(it.hook)}</textarea></label>
+    <div class="mem-f"><label>音节<input data-k="syl" value="${esc(it.syl)}"></label><label>中文<input data-k="d" value="${esc(it.d)}"></label></div>
+    <div class="row-btns"><button class="btn sm" data-a="save">保存这张</button><button class="btn sm" data-a="draw">复制画图提示词</button></div></div>`).join('')}</div>`;
+  const paint=i=>{ const it=MEM.items[i], img=out.querySelector(`.mem-item[data-i="${i}"] .mem-img`); const c=drawMemCard(it, stu&&stu.name);
+    c.toBlob(b=>{ if(!b||!img.isConnected) return; if(img.dataset.u) URL.revokeObjectURL(img.dataset.u); const u=URL.createObjectURL(b); img.dataset.u=u; img.src=u; }, 'image/png'); };
+  MEM.items.forEach((_,i)=>paint(i));
+  const timers={};
+  out.querySelectorAll('.mem-item').forEach(row=>{
+    const i=+row.dataset.i, it=MEM.items[i];
+    row.querySelectorAll('[data-k]').forEach(inp=>inp.oninput=()=>{ it[inp.dataset.k]=inp.value; memRemember(it); clearTimeout(timers[i]); timers[i]=setTimeout(()=>paint(i),300); });
+    row.querySelector('[data-a="save"]').onclick=()=>memSave([it]);
+    row.querySelector('[data-a="draw"]').onclick=()=>copyText(drawPrompt(it),'已复制，粘贴到豆包或即梦就能画插画');
+  });
+  document.getElementById('mPrompt').onclick=()=>copyText(memPrompt(),'已复制，去 AI 那里粘贴吧');
+  document.getElementById('mApply').onclick=()=>{
+    let n=0; document.getElementById('mAI').value.split('\n').forEach(l=>{
+      const p=l.split(/[|｜]/).map(s=>s.trim()); if(p.length<3) return;
+      const it=MEM.items.find(x=>x.w.toLowerCase()===p[0].replace(/^[\d.\s、]+/,'').toLowerCase()); if(!it) return;
+      it.bubble=p[1]||it.bubble; it.hook=p[2]||it.hook; if(p[3]) it.emoji=p[3]; memRemember(it); n++; });
+    if(!n){ toast('没有识别到内容，请检查格式：单词 | 气泡 | 记忆钩子 | emoji'); return; }
+    renderMem(); toast(`已填入 ${n} 个单词`);
+  };
+  document.getElementById('mAll').onclick=()=>memSave(MEM.items);
+}
+function memRemember(it){ const m=MEMO(); m[it.w.toLowerCase()]={bubble:it.bubble, hook:it.hook, emoji:it.emoji, syl:it.syl}; lsSet('wh.hooks', m); }
+async function memSave(items){
+  const blobs=await Promise.all(items.map(it=>new Promise(r=>drawMemCard(it, stu&&stu.name).toBlob(b=>r(b),'image/png'))));
+  const files=blobs.map((b,i)=>new File([b], `${items[i].w}.png`, {type:'image/png'}));
+  try{ if(navigator.canShare && navigator.canShare({files})){ await navigator.share({files, title:'记忆卡片'}); return; } }catch(e){ if(e && e.name==='AbortError') return; }
+  const o=document.createElement('div'); o.className='img-overlay';
+  o.innerHTML=`<p>长按每张图片保存（共 ${items.length} 张）</p>${blobs.map((b,i)=>`<img src="${URL.createObjectURL(b)}" alt="${esc(items[i].w)}">`).join('')}<button class="btn" id="ovClose">关闭</button>`;
+  document.body.appendChild(o); o.querySelector('#ovClose').onclick=()=>{ o.querySelectorAll('img').forEach(im=>URL.revokeObjectURL(im.src)); o.remove(); };
+}
+
 /* ---------- 课堂: 1-hour timer, lesson record, word sheets, 学情报告 ---------- */
 const LESSON_MS = 60*60*1000, WARN_MS = 5*60*1000;
 const pad2 = n => String(n).padStart(2,'0');
@@ -7612,9 +7796,9 @@ function sheetHTML(r, mode){
   const n=repNumbers(r);
   const sec=(title, words)=> words.length ? `<div class="sh-sec">${title}（${words.length}）</div>
     <table class="sh-t"><tbody>${words.map((w,i)=>`<tr><td class="no">${i+1}</td><td class="en">${mode==='cn'?'':esc(w)}</td><td class="cn">${mode==='en'?'':esc(r.defs[w]||'')}</td></tr>`).join('')}</tbody></table>` : '';
-  const revWords=[...r.rev.ng, ...r.rev.ok], label={both:'中英对照', cn:'看中文写英文', en:'看英文写中文'}[mode];
+  const revWords=[...r.rev.ng], label={both:'中英对照', cn:'看中文写英文', en:'看英文写中文'}[mode];
   return `<div class="sheet" id="capture"><div class="sh-h"><b>单词表 · ${label}</b><span>${esc(r.name)} · ${ymd(r.start)} · ${esc(r.libName)}</span></div>
-    ${sec('复习单词', revWords)}${sec('学新单词', r.learn.words)}
+    ${sec('复习时遗忘、已重新学习的单词', revWords)}${sec('学新单词', r.learn.words)}
     ${!revWords.length&&!r.learn.words.length?'<p class="sh-empty">这节课没有单词</p>':''}</div>`;
 }
 function reportHTML(r){
@@ -7656,11 +7840,12 @@ function openReport(id, tab='report', fresh=false){
     <div class="rp-tabs">${tabs.map(([k,t])=>`<button data-t="${k}" aria-pressed="${k===tab}">${t}</button>`).join('')}</div>
     <div id="rpBody">${tab==='report'?reportHTML(r):sheetHTML(r,tab)}</div>
     ${tab==='report'?statusPanelHTML(r):''}
-    <div class="rp-actions">${tab==='report'?'<button class="btn sm" id="rpEdit">修改评语</button>':''}<button class="btn primary" id="rpSave">保存为图片</button></div>`;
+    <div class="rp-actions">${tab==='report'?'<button class="btn sm" id="rpEdit">修改评语</button>':''}<button class="btn" id="rpMem">生成记忆卡片</button><button class="btn primary" id="rpSave">保存为图片</button></div>`;
   if(fresh) FX.levelClear({big:true, voiceText:'Excellent! You did it'});
   document.getElementById('rpBack').onclick=()=>{ REP=null; home(); };
   app.querySelectorAll('.rp-tabs button').forEach(b=>b.onclick=()=>openReport(id,b.dataset.t));
   document.getElementById('rpSave').onclick=()=>saveImage(`${r.name}-${ymd(r.start)}-${tabs.find(t=>t[0]===tab)[1]}.png`);
+  document.getElementById('rpMem').onclick=()=>{ const ws=[...new Set([...r.rev.ng, ...r.learn.words])]; memPage(ws, ()=>openReport(id,tab)); };
   if(tab==='report') bindStatusPanel(r, ()=>{ const y=window.scrollY; openReport(id,'report'); window.scrollTo(0,y); });
   const ed=document.getElementById('rpEdit');
   if(ed) ed.onclick=()=>{
@@ -7856,5 +8041,6 @@ function studentsHome(){
 bootApp();
 prepUI();
 </script>
+
 
 </body></html>
